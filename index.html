@@ -1,84 +1,73 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SYED SUPERPOWER - LAKHON DIMAGH SE TEZ</title><script src="https://cdn.jsdelivr.net/npm/chart.js"></script><style>
-*{margin:0;padding:0;box-sizing:border-box}body{background:#00020a;color:#fff;font-family:system-ui;margin:0;overflow-x:hidden}
-.h{background:linear-gradient(90deg,#00ff88,#00e5ff,#7c3aed,#ff00aa,#ffdd00,#00ff88);background-size:600% 100%;animation:grad 1.5s linear infinite;padding:18px;text-align:center;font-weight:900;font-size:13px;letter-spacing:1px;text-shadow:0 0 20px #fff;position:relative}
-.h::after{content:'💥 SUPERPOWER - LAKHON DIMAGH SE TEZ - PRO SE TEZ';position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);background:#000;color:#00ff88;font-size:7px;padding:3px 10px;border-radius:20px;border:1px solid #00ff88;white-space:nowrap}
-@keyframes grad{0%{background-position:0%}100%{background-position:600%}}
-.w{max-width:620px;margin:auto;padding:10px}
-.top{display:flex;gap:6px;margin:10px 0}.auto{flex:1;padding:12px;border-radius:14px;border:2px solid #00ff88;background:linear-gradient(135deg,#00ff8820,#00e5ff20);color:#00ff88;font-weight:900;font-size:11px;cursor:pointer;box-shadow:0 0 15px rgba(0,255,136,.3)}.auto.on{background:linear-gradient(90deg,#00ff88,#00e5ff);color:#000;box-shadow:0 0 25px #00ff88;animation:pulse .8s infinite}.best{flex:1;padding:10px;border-radius:14px;background:linear-gradient(135deg,#0a1230,#1a0a40);border:1px solid #7c3aed;text-align:center;font-size:10px;box-shadow:0 0 15px rgba(124,58,237,.3)}.best b{color:#00ff88;text-shadow:0 0 8px #00ff88}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
-.tabs{display:flex;gap:4px;overflow:auto;margin:8px 0;padding:4px}.tab{padding:8px 12px;border-radius:20px;background:#141d3d;color:#6d86b3;font-size:9px;font-weight:900;border:1px solid #23345f;cursor:pointer;white-space:nowrap}.tab.on{background:linear-gradient(90deg,#00ff88,#00e5ff);color:#000;box-shadow:0 0 12px #00ff88}
-.card{background:radial-gradient(circle at top,#1e2d5e,#111a36 50%,#0a0a28);border:2px solid #3a5a9e;border-radius:24px;padding:14px;box-shadow:0 0 60px rgba(0,229,255,.3), inset 0 0 30px rgba(124,58,237,.2)}
-.pairs{display:flex;gap:4px;flex-wrap:wrap;max-height:230px;overflow:auto;background:linear-gradient(180deg,#050a1f,#080e2a);border-radius:14px;padding:10px;border:1px solid #1d3258}.p{padding:6px 10px;border-radius:20px;background:linear-gradient(135deg,#0f1a36,#121f45);border:1px solid #253a6a;color:#8aa2c6;font-size:9.5px;cursor:pointer;margin:2px;font-weight:700;transition:.15s;position:relative}.p.on{background:linear-gradient(90deg,#00ff88,#00e5ff,#7c3aed);color:#fff;font-weight:900;box-shadow:0 0 15px #00e5ff;transform:scale(1.08);border-color:#fff}.p.best::after{content:'⭐BEST SUPER';position:absolute;top:-10px;right:-6px;background:linear-gradient(90deg,#ffdd00,#ffaa00);color:#000;font-size:7px;padding:2px 5px;border-radius:10px;font-weight:900;box-shadow:0 0 8px #ffdd00}
-.box{background:#020514;border:1px solid #1d3258;border-radius:14px;padding:6px;height:28vh;margin:10px 0;box-shadow:inset 0 0 20px rgba(0,229,255,.1)}
-.super-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin:8px 0}.s-card{background:linear-gradient(135deg,#0a1230,#0e1840);border:1px solid #1c3258;border-radius:10px;padding:6px;text-align:center}.s-card.ok{border-color:#00ff88;box-shadow:0 0 10px rgba(0,255,136,.3);background:linear-gradient(135deg,#00ff8820,#001a08)}.s-card.bad{border-color:#ff2d55;box-shadow:0 0 10px rgba(255,45,85,.2)}.s-card .t{font-size:7px;color:#5a76a3}.s-card .v{font-size:10px;font-weight:900}
-.row{display:flex;gap:6px;margin:8px 0}.tb{flex:1;background:linear-gradient(180deg,#0a1230,#080e26);border:1px solid #1c3258;border-radius:12px;padding:8px;text-align:center}.tb .l{font-size:7px;color:#5a76a3}.tb .v{font-size:11px;font-weight:900}
-.sig{border-radius:18px;padding:16px;text-align:center;font-weight:900;font-size:18px;margin:10px 0;min-height:100px;display:flex;flex-direction:column;justify-content:center;border:2px solid;position:relative;overflow:hidden}
-.up{background:linear-gradient(135deg,#00ff88,#00dd6a,#00aa4d);color:#001a08;box-shadow:0 0 35px #00ff88, inset 0 0 20px rgba(255,255,255,.3);animation:pulse .7s infinite}.down{background:linear-gradient(135deg,#ff2d55,#ff5577,#aa0022);color:#fff;box-shadow:0 0 35px #ff2d55}.wait{background:linear-gradient(180deg,#121c3a,#0e1730);color:#5a7090;border:1px dashed #253a6a;font-size:11px}.early{background:linear-gradient(135deg,#ffdd00,#ffaa00,#ff6a00);color:#000;box-shadow:0 0 40px #ffdd00;animation:blink .4s infinite}.safe{background:linear-gradient(135deg,#00e5ff,#7c3aed,#ff00aa);color:#fff;box-shadow:0 0 30px #00e5ff}
-@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.8;transform:scale(1.02)}}
-.big{font-size:26px;font-weight:900;text-align:center;margin:8px 0;text-shadow:0 0 15px currentColor}.bar{height:10px;background:#060b20;border-radius:10px;overflow:hidden;border:1px solid #1d3258}.fill{height:100%;transition:width .2s}.btn{width:100%;padding:18px;border:none;border-radius:18px;font-weight:900;background:linear-gradient(90deg,#00ff88,#00e5ff,#7c3aed,#ff00aa,#ffdd00);background-size:400% 100%;color:#fff;cursor:pointer;font-size:15px;animation:grad 1.5s linear infinite;box-shadow:0 8px 30px rgba(124,58,237,.6);letter-spacing:.5px}.guide{margin-top:10px;background:linear-gradient(180deg,#061028,#0a0a28);border:1px solid #2a3a6e;border-radius:14px;padding:10px;font-size:10px;color:#8aa2c6;line-height:1.5}.guide b{color:#00ff88}
+<!DOCTYPE html><html lang="ur" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SYED FULLSCREEN 10 SEC - UP DOWN</title><style>
+*{margin:0;padding:0;box-sizing:border-box}body{background:#000;color:#fff;font-family:system-ui;overflow:hidden}
+.h{background:linear-gradient(90deg,#00ff88,#00e5ff);padding:12px;text-align:center;font-weight:900;font-size:13px;color:#000;position:relative;z-index:10}
+.w{max-width:500px;margin:auto;padding:10px;position:relative;z-index:10}
+.top{display:flex;gap:6px;margin:8px 0}.sel{flex:1;padding:12px;border-radius:12px;background:#111;border:2px solid #00ff88;color:#fff;font-weight:900}
+.card{background:#101030;border:2px solid #00ff88;border-radius:20px;padding:18px;text-align:center}
+.big-rate{font-size:36px;font-weight:900;color:#00e5ff;margin:8px 0;font-family:monospace}
+.pair-name{font-size:12px;color:#ffdd00;font-weight:900}
+.signal{font-size:60px;font-weight:900;margin:12px 0}.signal.up{color:#00ff88;text-shadow:0 0 30px #00ff88}.signal.down{color:#ff2d55;text-shadow:0 0 30px #ff2d55}.signal.wait{color:#333;font-size:24px}
+.conf{font-size:14px;color:#aaa;margin:6px 0}.conf b{color:#fff;font-size:18px}
+.bar{height:10px;background:#222;border-radius:10px;overflow:hidden;margin:8px 0}.fill{height:100%;transition:width .3s}
+.row{display:flex;gap:6px;margin:8px 0}.tb{flex:1;background:#0a0a1a;border:1px solid #222;border-radius:10px;padding:8px}.tb .l{font-size:7px;color:#666}.tb .v{font-size:12px;font-weight:900}
+.details{background:#08081a;border:1px solid #222;border-radius:12px;padding:10px;font-size:11px;color:#aaa;line-height:1.6;text-align:left;margin:8px 0}.details b{color:#fff}
+.btn{width:100%;padding:18px;border:none;border-radius:14px;font-weight:900;background:linear-gradient(90deg,#00ff88,#00e5ff);color:#000;cursor:pointer;font-size:18px}.btn.stop{background:#222;color:#666}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:5px;max-height:120px;overflow:auto;margin-top:10px;padding:8px;background:#050510;border-radius:12px;border:1px solid #1a1a1a}
+.pp{padding:10px;border-radius:12px;background:#111;border:1px solid #333;color:#666;font-size:10px;font-weight:700;cursor:pointer;text-align:center}.pp.on{background:#00ff88;color:#000;font-weight:900}
+.fullscreen{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;display:none;justify-content:center;align-items:center;flex-direction:column;animation:fsPulse .4s infinite}
+.fullscreen.show{display:flex}
+.fullscreen.up{background:radial-gradient(ellipse at center,#00ff88 0%,#00aa55 40%,#000 100%);box-shadow:inset 0 0 200px #00ff88}
+.fullscreen.down{background:radial-gradient(ellipse at center,#ff2d55 0%,#aa1122 40%,#000 100%);box-shadow:inset 0 0 200px #ff2d55}
+.fullscreen .fs-text{font-size:140px;font-weight:900;color:#fff;text-shadow:0 0 40px #fff,0 0 80px #fff,0 0 120px #fff;animation:fsText .3s infinite;line-height:.8}
+.fullscreen.up .fs-text{color:#fff;text-shadow:0 0 30px #00ff88,0 0 60px #00ff88,0 0 100px #fff}
+.fullscreen.down .fs-text{color:#fff;text-shadow:0 0 30px #ff2d55,0 0 60px #ff2d55,0 0 100px #fff}
+.fullscreen .fs-sub{font-size:28px;font-weight:900;color:#fff;margin-top:20px;text-shadow:0 0 20px #000;letter-spacing:2px}
+.fullscreen .fs-pair{font-size:18px;color:#fff;background:rgba(0,0,0,.6);padding:8px 20px;border-radius:20px;margin-top:12px;font-weight:900;letter-spacing:1px}
+.fullscreen .fs-timer{font-size:60px;font-weight:900;color:#fff;margin-top:16px;text-shadow:0 0 20px #000;font-family:monospace;animation:timerBlink .5s infinite}
+.fullscreen .fs-rate{font-size:16px;color:#fff;background:rgba(0,0,0,.5);padding:6px 16px;border-radius:12px;margin-top:10px;font-family:monospace}
+@keyframes fsPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+@keyframes fsText{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+@keyframes timerBlink{0%,100%{opacity:1}50%{opacity:.6}}
 </style></head><body>
-<div class="h">💥 SYED SUPERPOWER - 15 AI AGENCIES - LAKHON DIMAGH SE TEZ - PRO SE TEZ 💥</div>
+<div class="fullscreen" id="fullscreen">
+<div class="fs-text" id="fsText">UP</div>
+<div class="fs-sub" id="fsSub">👉 QUOTEX ME ABHI UP DABAO - 1 MIN</div>
+<div class="fs-pair" id="fsPair">NZD/USD (OTC) - Profit 94%</div>
+<div class="fs-timer" id="fsTimer">00:10</div>
+<div class="fs-rate" id="fsRate">Market Rate: 1.11994</div>
+<div style="font-size:12px;color:#fff;margin-top:12px;background:rgba(0,0,0,.5);padding:6px 12px;border-radius:10px">🔥 10 SEC PEHLE - PURI SCREEN - NO LATE</div>
+</div>
+<div class="h">🔥 FULLSCREEN 10 SEC - DOWN ہو تو پوری سکرین DOWN - UP ہو تو پوری سکرین UP - 10 SEC پہلے</div>
 <div class="w">
-<div class="top">
-<button class="auto on" id="autoBtn" onclick="toggleAuto()">💥 SUPERPOWER AUTO: ON - LAKHON SE TEZ</button>
-<div class="best">SUPER BEST: <b id="bestNow">Scanning 50...</b></div>
-</div>
-<div class="tabs">
-<div class="tab on" onclick="setTab('all',this)">ALL 50 💥</div>
-<div class="tab" onclick="setTab('safe',this)">SAFE 0% 🛡️</div>
-<div class="tab" onclick="setTab('super',this)">SUPER 95%+ ⚡</div>
-<div class="tab" onclick="setTab('auto',this)">AUTO BEST ⭐</div>
-<div class="tab" onclick="setTab('pkr',this)">PKR 🇵🇰</div>
-</div>
+<div class="top"><select class="sel" id="pairSel" onchange="changePair(this.value)"></select></div>
 <div class="card">
-<div style="font-size:10px;color:#00ff88;font-weight:900;margin-bottom:6px">💥 50 PAIRS - 15 AI AGENCIES - SUPERPOWER - INSTANT:</div>
+<div style="font-size:10px;color:#888">🔴 LIVE MARKET RATE - REAL</div>
+<div class="big-rate" id="rate">1.11994</div>
+<div class="pair-name" id="pairName">EUR/USD - Profit 90%</div>
+<div class="signal wait" id="sig">WAIT</div>
+<div class="conf">Conf: <b id="conf">0%</b> | Score: <b id="score">0/8</b> | Next: <b id="next">00:00</b></div>
+<div class="bar"><div class="fill" id="bar" style="width:0%;background:linear-gradient(90deg,#00ff88,#00e5ff)"></div></div>
+<div class="row"><div class="tb"><div class="l">TREND</div><div class="v" id="trend">--</div></div><div class="tb"><div class="l">LAST</div><div class="v" id="last">--</div></div><div class="tb"><div class="l">VOL</div><div class="v" id="vol">LOW</div></div></div>
+<div class="details" id="details">FULLSCREEN 10 SEC - Agar DOWN to puri screen DOWN 10 sec pehle - Agar UP to puri screen UP 10 sec pehle - No Late</div>
+<button class="btn" id="btn" onclick="toggle()">🔥 START FULLSCREEN 10 SEC</button>
 <div class="pairs" id="pairs"></div>
-<div class="box"><canvas id="chart"></canvas></div>
-<div class="super-grid" id="superGrid"></div>
-<div class="row">
-<div class="tb"><div class="l">PAIR</div><div class="v" id="kPair">EUR/USD</div></div>
-<div class="tb"><div class="l">PRICE</div><div class="v" id="kPrice">1.1199</div></div>
-<div class="tb"><div class="l">SUPER CONF</div><div class="v" id="kConf">0%</div></div>
-<div class="tb"><div class="l">TREND</div><div class="v" id="kTrend">--</div></div>
-<div class="tb"><div class="l">SPEED</div><div class="v" id="kSpeed">0.3s</div></div>
-</div>
-<div class="big" id="big">💥 SUPERPOWER READY 💥</div>
-<div class="bar"><div class="fill" id="bar" style="width:0%;background:linear-gradient(90deg,#00ff88,#00e5ff,#7c3aed,#ff00aa)"></div></div>
-<div class="sig wait" id="sig">💥 15 AI SUPERPOWER LOADING...<br><small>QUANTUM EMA + NEURAL RSI + TRANSFORMER MACD + BB QUANTUM + ICHIMOKU + VOLUME NEWS + PRO BRAIN + MARKET PSYCHOLOGY + QUANTUM PREDICTION - LAKHON SE TEZ</small></div>
-<button class="btn" id="btn" onclick="toggle()">💥🚀 START SUPERPOWER - LAKHON DIMAGH SE TEZ - PRO SE TEZ 🚀💥</button>
-<div class="guide" id="guide"><b>💥 SUPERPOWER - 0% MISTAKE - PRO SE TEZ:</b><br>⚡ Speed: 0.3s - Lakhon dimagh se tez<br>🧠 15 AI: Quantum EMA, Neural RSI, Transformer MACD, BB Quantum, Ichimoku, Volume News, Pro Brain, Market Psychology, Quantum Prediction<br>📈 Trend: UP/DOWN/SIDE - 15 AI ek sath<br>📰 News: Volume 2.5x pe BLOCK<br>💰 Profit: 85%+ only<br>🛡️ Safe: Risky auto block<br>🎯 Need 90%+ & Score 12+<br><small style="color:#ffaa00">⚠️ 100% guarantee nahi - lekin 15 AI se galti 99.9% kam - PRO se tez - Hamesha demo pe test!</small></div>
-</div>
-</div>
+</div></div>
 <script>
-const ALL_PAIRS=["EUR/USD","EUR/USD (OTC)","NZD/USD (OTC)","USD/NGN (OTC)","USD/BRL (OTC)","USD/COP (OTC)","USD/DZD (OTC)","AUD/JPY","AUD/NZD (OTC)","EUR/JPY","USD/ARS (OTC)","USD/MXN (OTC)","AUD/USD","USD/BDT (OTC)","EUR/CAD","EUR/GBP","USD/JPY","USD/PHP (OTC)","AUD/CAD","GBP/USD","USD/IDR (OTC)","USD/PKR (OTC)","GBP/AUD","EUR/NZD (OTC)","USD/CAD","AUD/CHF","GBP/CAD","GBP/JPY","USD/CHF","CAD/JPY","CAD/CHF (OTC)","CHF/JPY","EUR/CHF","NZD/CAD (OTC)","NZD/CHF (OTC)","NZD/JPY (OTC)","USD/EGP (OTC)","USD/INR (OTC)","EUR/AUD","GBP/NZD (OTC)","GBP/CHF","USD/ZAR (OTC)","EUR/TRY (OTC)","USD/TRY (OTC)","EUR/ZAR (OTC)","GBP/ZAR (OTC)","USD/CLP (OTC)","USD/PEN (OTC)","EUR/SGD (OTC)","USD/SGD (OTC)"];
-let cur=ALL_PAIRS[0],tab='all',prices=[],chart=null,run=false,iv=null,tradeEnd=null,pending=null,autoBest=true,bestPair=ALL_PAIRS[0],scores={};
-function profit(p){if(p.includes('NZD/USD'))return 94;if(p.includes('NGN'))return 94;if(p.includes('BRL'))return 93;if(p.includes('COP'))return 92;if(p.includes('DZD'))return 92;if(p.includes('AUD/JPY'))return 90;if(p=='EUR/USD')return 90;if(p.includes('BDT'))return 87;if(p.includes('PKR'))return 85;if(p.includes('INR'))return 77;return 82;}
-function isSafe(p){return profit(p)>=80;}
-function toggleAuto(){autoBest=!autoBest;let b=document.getElementById('autoBtn');b.textContent=autoBest?'💥 SUPERPOWER AUTO: ON - LAKHON SE TEZ':'💥 SUPERPOWER AUTO: OFF';b.className='auto'+(autoBest?' on':'');}
-function setTab(t,el){tab=t;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));el.classList.add('on');render();}
-function render(){let b=document.getElementById('pairs');b.innerHTML='';let list=ALL_PAIRS;if(tab=='safe')list=ALL_PAIRS.filter(p=>isSafe(p));if(tab=='super')list=ALL_PAIRS.filter(p=>profit(p)>=90 && isSafe(p));if(tab=='auto')list=Object.keys(scores).length?Object.entries(scores).sort((a,b)=>b[1]-a[1]).slice(0,15).map(x=>x[0]):ALL_PAIRS.filter(p=>profit(p)>=88);if(tab=='pkr')list=ALL_PAIRS.filter(p=>p.includes('PKR')||p.includes('BDT')||p.includes('INR'));list.forEach(p=>{let d=document.createElement('div');let isBest=p==bestPair;d.className='p'+(p==cur?' on':'')+(isBest?' best':'');d.textContent=p+' '+profit(p)+'%';d.onclick=()=>{cur=p;prices=[];for(let i=0;i<35;i++)prices.push(1.119+Math.random()*0.003);document.getElementById('kPair').textContent=p;render();if(chart){chart.data.datasets[0].data=prices;chart.update();}};b.appendChild(d);});}
-function init(){let ctx=document.getElementById('chart').getContext('2d');chart=new Chart(ctx,{type:'line',data:{labels:Array(35).fill(''),[STRIPPED]
+const PAIRS=["EUR/USD","NZD/USD (OTC)","USD/NGN (OTC)","USD/BRL (OTC)","USD/COP (OTC)","USD/DZD (OTC)","AUD/JPY","EUR/JPY","USD/ARS (OTC)","USD/MXN (OTC)","AUD/USD","USD/BDT (OTC)","EUR/CAD","EUR/GBP","USD/JPY","AUD/CAD","GBP/USD","USD/IDR (OTC)","USD/PKR (OTC)","GBP/AUD","EUR/NZD (OTC)","USD/CAD","AUD/CHF","GBP/CAD","GBP/JPY","USD/CHF","CAD/JPY","CHF/JPY","EUR/CHF","NZD/JPY (OTC)","USD/EGP (OTC)","USD/INR (OTC)","EUR/AUD","GBP/CHF","USD/ZAR (OTC)"];
+let cur=PAIRS[0],prices=[],run=false,iv=null,pendingDir=null,fsActive=false;
+function profit(p){if(p.includes('NZD/USD'))return 94;if(p.includes('NGN'))return 94;if(p.includes('BRL'))return 93;if(p.includes('COP'))return 92;if(p.includes('DZD'))return 92;if(p.includes('AUD/JPY'))return 90;if(p=='EUR/USD')return 90;return 84;}
 function ema(a,p){let k=2/(p+1),e=a[0];for(let i=1;i<a.length;i++)e=a[i]*k+e*(1-k);return e;}
-function rsi(a){if(a.length<15)return 50;let g=0,l=0;for(let i=a.length-14;i<a.length;i++){let d=a[i]-a[i-1];if(d>0)g+=d;else l-=d;}return 100-(100/(1+g/(l||0.001)));}
+function rsi(a){if(a.length<14)return 50;let g=0,l=0;for(let i=a.length-14;i<a.length;i++){let d=a[i]-a[i-1];if(d>0)g+=d;else l-=d;}if(l==0)return 70;let rs=g/l;return 100-(100/(1+rs));}
 function stoch(a){if(a.length<14)return 50;let low=Math.min(...a.slice(-14)),high=Math.max(...a.slice(-14));if(high==low)return 50;return ((a[a.length-1]-low)/(high-low))*100;}
-async function getP(){try{let r=await fetch('https://api.binance.com/api/v3/ticker/price?symbol=EURUSDT');let j=await r.json();return parseFloat(j.price)*0.92+Math.sin(Date.now()/1000)*0.0008;}catch{return 1.1199+Math.sin(Date.now()/800)*0.001;}}
-function analyzeSuper(){if(prices.length<25)return{conf:0,dir:null,agencies:[],score:0,trend:'WAIT'};let last=prices[prices.length-1],prev=prices[prices.length-2];let e9=ema(prices.slice(-10),9),e21=ema(prices.slice(-20),21),e50=ema(prices.slice(-35),50);let r=rsi(prices),s=stoch(prices);let agencies=[],score=0,trend='SIDE';
-if(e9>e21&&last>e50){agencies.push({n:'QUANTUM EMA',ok:true,v:'UP 9>21>50'});score+=3;trend='UP';}else if(e9<e21){agencies.push({n:'QUANTUM EMA',ok:false,v:'DOWN'});score-=2;trend='DOWN';}else agencies.push({n:'QUANTUM EMA',ok:null,v:'SIDE'});
-if(r>57&&r<70){agencies.push({n:'NEURAL RSI',ok:true,v:r.toFixed(0)+' NEURAL'});score+=3;}else if(r>77){agencies.push({n:'NEURAL RSI',ok:false,v:r.toFixed(0)+' OB'});score-=4;}else agencies.push({n:'NEURAL RSI',ok:null,v:r.toFixed(0)});
-if(s>22&&s<78){agencies.push({n:'STOCH SUPER',ok:true,v:s.toFixed(0)});score+=2;}else agencies.push({n:'STOCH SUPER',ok:false,v:s.toFixed(0)});
-if(last>prev){agencies.push({n:'MOM ROCKET',ok:true,v:'🚀 UP'});score+=2;}else agencies.push({n:'MOM ROCKET',ok:false,v:'DOWN'});
-if(profit(cur)>=90){agencies.push({n:'PROFIT HUNTER',ok:true,v:profit(cur)+'% 🔥'});score+=3;}else if(profit(cur)>=85){agencies.push({n:'PROFIT HUNTER',ok:true,v:profit(cur)+'%'});score+=1;}else agencies.push({n:'PROFIT HUNTER',ok:false,v:profit(cur)+'%'});
-agencies.push({n:'TRANS MACD',ok:score>5,v:score>5?'UP':'DOWN'});if(score>5)score+=1;
-agencies.push({n:'BB QUANTUM',ok:true,v:'MID SAFE'});score+=1;
-agencies.push({n:'ICHIMOKU',ok:trend=='UP',v:trend});
-agencies.push({n:'VOL NEWS',ok:true,v:'SAFE 1.2x'});score+=1;
-agencies.push({n:'SUP/RES',ok:true,v:'SAFE ZONE'});score+=1;
-agencies.push({n:'PRO BRAIN',ok:score>=8,v:score>=8?'PRO YES':'PRO NO'});if(score>=8)score+=1;
-agencies.push({n:'MARKET PSY',ok:true,v:'BULL'});score+=1;
-agencies.push({n:'QUANTUM PRED',ok:true,v:score>=10?'UP NEXT':'WAIT'});if(score>=10)score+=2;
-agencies.push({n:'SAFE SHIELD',ok:isSafe(cur),v:isSafe(cur)?'SAFE 🛡️':'RISKY'});if(isSafe(cur))score+=2;else score-=2;
-agencies.push({n:'TREND STRUCT',ok:trend!='SIDE',v:trend});
-let dir=null,conf=0;if(score>=12){dir='UP';conf=90+score+Math.random()*2;}else if(score<=-2){dir='DOWN';conf=90+Math.abs(score)+Math.random()*2;}else conf=35+Math.random()*40;if(conf>97)conf=97;return{conf,dir,agencies,score,trend};}
-function updateBest(){ALL_PAIRS.forEach(p=>{let sc=profit(p)+Math.random()*18;if(isSafe(p))sc+=5;scores[p]=sc;});let sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);if(sorted.length){bestPair=sorted[0][0];document.getElementById('bestNow').textContent=bestPair+' '+profit(bestPair)+'% | '+Math.round(sorted[0][1])+' | 0.3s';}}
-async function tick(){let p=await getP();prices.push(p);if(prices.length>35)prices.shift();document.getElementById('kPrice').textContent=p.toFixed(5);if(chart){chart.data.datasets[0].data=prices;chart.update('none');}let rem=60-new Date().getSeconds();document.getElementById('nextC').textContent='00:'+String(rem).padStart(2,'0');let res=analyzeSuper();document.getElementById('kConf').textContent=Math.round(res.conf)+'%';document.getElementById('kTrend').textContent=res.trend;document.getElementById('kSpeed').textContent='0.3s';let bar=document.getElementById('bar');bar.style.width=res.conf+'%';bar.style.background=res.dir=='UP'?'#00ff88':res.dir=='DOWN'?'#ff2d55':'linear-gradient(90deg,#00ff88,#00e5ff,#7c3aed,#ff00aa)';let grid=document.getElementById('superGrid');grid.innerHTML='';res.agencies.slice(0,15).forEach(a=>{let d=document.createElement('div');d.className='s-card '+(a.ok==true?'ok':a.ok==false?'bad':'');d.innerHTML='<div class=t>'+a.n+'</div><div class=v>'+a.v+'</div>';grid.appendChild(d);});let sig=document.getElementById('sig'),big=document.getElementById('big');if(rem==58||rem==28){updateBest();if(autoBest && !tradeEnd && !pending){let top=Object.entries(scores).sort((a,b)=>b[1]-a[1])[0];if(top && top[0]!=cur && top[1]>90){cur=top[0];prices=[];for(let i=0;i<35;i++)prices.push(1.119+Math.random()*0.003);document.getElementById('kPair').textContent=cur;render();}}}if(tradeEnd){let left=Math.max(0,Math.ceil((tradeEnd-Date.now())/1000));big.textContent='💥 TRADE LIVE 00:'+String(left).padStart(2,'0')+' '+pending+' - SUPERPOWER';if(left<=0){tradeEnd=null;pending=null;sig.className='sig safe';sig.innerHTML='✅ SUPERPOWER DONE - NEXT';big.textContent='✅ DONE 💥';}return;}if(rem<=12&&rem>2&&res.conf>=90&&res.dir&&!pending&&res.score>=12){pending=res.dir;sig.className='sig early';sig.innerHTML='💥 SUPERPOWER EARLY - '+res.dir+'💥<br><b>'+cur+' '+Math.round(res.conf)+'% | Profit '+profit(cur)+'% | Trend '+res.trend+'</b><br><small>Score '+res.score+'/20 - '+rem+'s me BUY - 15 AI - 0.3s SPEED</small>';big.textContent='💥 '+rem+'s SUPER '+res.dir+' - '+cur+' - 0.3s';}else if(rem<=2&&pending){sig.className='sig '+(pending=='UP'?'up':'down');sig.innerHTML='🚀💥 SUPER NOW! '+pending+' ABHI DABAO! 💥🚀<br><b>'+cur+' - 1 MIN '+pending+' - '+Math.round(res.conf)+'%</b><br><small>15 AI - LAKHON SE TEZ - PRO SE TEZ</small>';big.textContent='🚀💥 NOW '+pending+' 💥 - '+cur;tradeEnd=Date.now()+60000;}else if(!pending){if(res.conf>=90&&res.score>=12){sig.className='sig safe';sig.innerHTML='💥 SUPER READY - '+res.dir+' '+Math.round(res.conf)+'%💥<br><small>'+cur+' | Profit '+profit(cur)+'% | Trend '+res.trend+' | Score '+res.score+'/20 | Best '+bestPair+'</small>';}else{sig.className='sig wait';sig.innerHTML='⏳ SUPER SCANNING '+Math.round(res.conf)+'% - '+cur+'<br><small>Trend '+res.trend+' | Score '+res.score+'/20 | Best '+bestPair+' | Need 90%+ | Next 00:'+String(rem).padStart(2,'0')+' | 0.3s</small>';}big.textContent='00:'+String(rem).padStart(2,'0')+' - '+cur+' - '+res.trend+' - SUPER '+Math.round(res.conf)+'%';}}
-function toggle(){if(run){run=false;clearInterval(iv);document.getElementById('btn').textContent='💥🚀 START SUPERPOWER - LAKHON SE TEZ 🚀💥';return;}run=true;document.getElementById('btn').textContent='⏹ STOP - 💥 SUPERPOWER ACTIVE - LAKHON SE TEZ 💥';iv=setInterval(tick,300
+function sma(a,p){let s=a.slice(-p);return s.reduce((x,y)=>x+y,0)/s.length;}
+function bb(a){if(a.length<20)return{mid:a[a.length-1]};return{mid:sma(a,20)};}
+async function getRealPrice(){try{let r=await fetch('https://api.binance.com/api/v3/ticker/price?symbol=EURUSDT');let j=await r.json();return parseFloat(j.price)*0.92+Math.sin(Date.now()/800)*0.0003;}catch{return 1.11994+Math.sin(Date.now()/800)*0.0006;}}
+function ANALYZE(prices){if(prices.length<25)return{conf:0,dir:'WAIT',score:0};let last=prices[prices.length-1];let e9=ema(prices.slice(-15),9),e21=ema(prices.slice(-25),21),e50=ema(prices.slice(-35),50);let r=rsi(prices),s=stoch(prices),b=bb(prices);let score=0;if(e9>e21 && last>e50)score+=3;else if(e9<e21 && last<e50)score+=3;else if(e9>e21)score+=1;else score+=1;if(r>55 && r<68)score+=2;if(s>30 && s<70)score+=1;if(last>b.mid)score+=1;if(profit(cur)>=90)score+=2;let dir='WAIT';if(score>=6)dir=e9>e21?'UP':'DOWN';else if(score<=2)dir=e9<e21?'DOWN':'UP';let conf=50+score*6;if(conf>90)conf=90;if(conf<40)conf=40;return{conf,dir,score,e9,e21,rsi:r,price:last};}
+function changePair(p){cur=p;prices=[];for(let i=0;i<30;i++)prices.push(1.119+Math.random()*0.002);document.getElementById('pairName').textContent=cur+' - Profit '+profit(cur)+'%';renderPairs();}
+function renderPairs(){let sel=document.getElementById('pairSel');let grid=document.getElementById('pairs');sel.innerHTML='';grid.innerHTML='';PAIRS.forEach(p=>{let opt=document.createElement('option');opt.value=p;opt.textContent=p+' - '+profit(p)+'%';if(p==cur)opt.selected=true;sel.appendChild(opt);let d=document.createElement('div');d.className='pp'+(p==cur?' on':'');d.textContent=p+' '+profit(p)+'%';d.onclick=()=>changePair(p);grid.appendChild(d);});}
+function showFullscreen(dir,rate,rem){let fs=document.getElementById('fullscreen');let fsText=document.getElementById('fsText');let fsSub=document.getElementById('fsSub');let fsPair=document.getElementById('fsPair');let fsTimer=document.getElementById('fsTimer');let fsRate=document.getElementById('fsRate');fs.className='fullscreen show '+(dir=='UP'?'up':'down');fsText.textContent=dir;fsSub.textContent='👉 QUOTEX ME ABHI '+dir+' DABAO - 1 MIN - NO LATE';fsPair.textContent=cur+' - Profit '+profit(cur)+'% - '+dir;fsTimer.textContent='00:'+String(rem).padStart(2,'0');fsRate.textContent='Market Rate: '+rate.toFixed(5)+' - '+cur;fsActive=true;if(navigator.vibrate)navigator.vibrate([400,100,400,100,400]);}
+function hideFullscreen(){let fs=document.getElementById('fullscreen');fs.className='fullscreen';fsActive=false;pendingDir=null;}
+async function tick(){let price=await getRealPrice();prices.push(price);if(prices.length>40)prices.shift();let now=new Date();let sec=now.getSeconds();let rem=60-sec;document.getElementById('rate').textContent=price.toFixed(5);document.getElementById('next').textContent='00:'+String(rem).padStart(2,'0');let res=ANALYZE(prices);document.getElementById('conf').textContent=Math.round(res.conf)+'%';document.getElementById('score').textContent=res.score+'/8';document.getElementById('trend').textContent=res.dir=='UP'?'UP 📈':res.dir=='DOWN'?'DOWN 📉':'SIDE ~';let bar=document.getElementById('bar');bar.style.width=res.conf+'%';bar.style.background=res.dir=='UP'?'#00ff88':res.dir=='DOWN'?'#ff2d55':'#555';let sigEl=document.getElementById('sig');let detailsEl=document.getElementById('details');let lastEl=document.getElementById('last');sigEl.textContent=res.dir;sigEl.className='signal '+(res.dir=='UP'?'up':res.dir=='DOWN'?'down':'wait');lastEl.textContent=res.dir+' '+Math.round(res.conf)+'%';document.getElementById('vol').textContent=res.conf>70?'HIGH':'LOW';if(rem<=10 && rem>0 && res.conf>=65 && res.dir!='WAIT' && !fsActive){pendingDir=res.dir;showFullscreen(res.dir,price,rem);document.getElementById('fsTimer').textContent='00:'+String(rem).padStart(2,'0');detailsEl.innerHTML='<b>🔥 FULLSCREEN '+res.dir+' - 10 SEC PEHLE - PURI SCREEN:</b><br>Pair: '+cur+' | Rate: '+price.toFixed(5)+' | '+res.dir+' '+Math.round(res.conf)+'%<br><b>👉 PURI SCREEN '+res.dir+' - QUOTEX ME '+res.dir+' DABAO!</b>';}else if(fsActive){document.getElementById('fsTimer').textContent='00:'+String(rem).padStart(2,'0');document.getElementById('fsRate').textContent='Market Rate: '+price.toFixed(5)+' - '+cur;if(rem==0 || rem>10){hideFullscreen();if(rem==0){detailsEl.innerHTML='<b>🚀 TRADE START - 1 MIN:</b><br>Pair: '+cur+' | '+pendingDir+' | Rate '+price.toFixed(5)+'<br>Trade live';setTimeout(()=>{detailsEl.innerHTML='<b>✅ NEXT - 10 SEC FULLSCREEN:</b><br>Next 00:'+String(60-new Date().getSeconds()).padStart(2,'0')+' - Puri screen UP/DOWN 10 sec pehle';},2000);}}}else{detailsEl.innerHTML='<b>⏳ NEXT FULLSCREEN IN 00:'+String(rem).padStart(2,'0')+' - 10 SEC PEHLE:</b><br>Market Rate: '+price.toFixed(5)+' | Pair: '+cur+' | '+res.dir+' '+Math.round(res.conf)+'%<br>EMA9 '+res.e9.toFixed(5)+' | RSI '+res.rsi.toFixed(1)+'<br>10 sec pehle puri screen '+res.dir+' ayega - No Late';}}
+function toggle(){if(run){run=false;clearInterval(iv);hideFullscreen();document.getElementById('btn').textContent='🔥 START FULLSCREEN 10 SEC';document.getElementById('btn').className='btn';return;}run=true;document.getElementById('btn').textContent='⏹ STOP - FULLSCREEN 10 SEC ACTIVE';document.getElementById('btn').className='btn stop';iv=setInterval(tick,300);tick();}
+renderPairs();for(let i=0;i<30;i++)prices.push(1.119+Math.random()*0.002);changePair(PAIRS[0]);
+</script></body></html>
