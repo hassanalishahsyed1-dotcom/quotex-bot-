@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QUOTEX BOT PRO</title>
+<style>
+body{background:#000;color:#fff;font-family:Arial;text-align:center;padding:20px}
+.card{background:#111;border:1px solid #00ff88;border-radius:15px;padding:20px;max-width:350px;margin:auto}
+.signal{font-size:50px;margin:15px 0;font-weight:bold}
+button{background:#00ff88;color:#000;border:0;padding:12px 25px;border-radius:8px;font-weight:bold;font-size:16px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="card">
+<h2 style="color:#00ff88">QUOTEX BOT PRO</h2>
+<div class="signal" id="sig">WAIT...</div>
+<div>Time: <span id="time">--</span></div>
+<button onclick="gen()">GET SIGNAL</button>
+</div>
+<script>
+function gen(){
+let s=document.getElementById("sig");
+s.innerText="ANALYZING...";
+setTimeout(()=>{
+let r=Math.random()>0.5;
+s.innerText=r?"BUY ▲":"SELL ▼";
+s.style.color=r?"#00ff88":"#ff4444";
+let d=new Date(); d.setMinutes(d.getMinutes()+1);
+document.getElementById("time").innerText=d.getHours()+":"+d.getMinutes();
+},1000);
+}
+</script>
+</body>
+</html>
