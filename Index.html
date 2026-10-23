@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotex Bot Signals</title>
+<style>
+body{background:#0a0a0a;color:#fff;font-family:Arial;text-align:center;padding:20px}
+.card{background:#1a1a1a;padding:20px;border-radius:15px;max-width:350px;margin:auto;box-shadow:0 0 20px #00ff88}
+button{background:#00ff88;color:#000;padding:15px 30px;border:none;border-radius:10px;font-size:18px;font-weight:bold;width:100%;margin-top:10px}
+.signal{font-size:40px;margin:15px 0}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>QUOTEX BOT</h2>
+<div>Pair: <span id="pair">EUR/USD (OTC)</span></div>
+<div class="signal" id="sig">WAIT...</div>
+<div>Time: <span id="time">--</span></div>
+<button onclick="getSignal()">GET SIGNAL</button>
+<button onclick="startAuto()">AUTO (1 MIN)</button>
+</div>
+<script>
+const pairs=["EUR/USD (OTC)","GBP/USD (OTC)","USD/JPY (OTC)","EUR/JPY (OTC)","GBP/JPY (OTC)"];
+function getSignal(){
+let p=pairs[Math.floor(Math.random()*pairs.length)];
+let s=Math.random()>0.5?"CALL 📈":"PUT 📉";
+let t=new Date(); t.setMinutes(t.getMinutes()+1); t.setSeconds(0);
+document.getElementById("pair").innerText=p;
+document.getElementById("sig").innerText=s;
+document.getElementById("time").innerText=t.toLocaleTimeString();
+document.getElementById("sig").style.color=s.includes("CALL")?"#00ff88":"#ff4444";
+}
+function startAuto(){
+getSignal();
+setInterval(getSignal,60000);
+alert("Auto Signal Started - 1 Min");
+}
+</script>
+</body>
+</html>
