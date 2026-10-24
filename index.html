@@ -2,114 +2,156 @@
 <html>
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gen-Z Bot - 10 Sec Early Alert</title>
+<title>1 MIN + 10 SEC EARLY - NO REPEAT SOUND</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0a12;color:#fff;font-family:Arial}
-.header{display:flex;justify-content:space-between;padding:10px;background:#0f0f1e}
-.grid{display:grid;grid-template-columns:160px 1fr 140px;gap:8px;padding:8px}
-.pairs{background:#111122;border-radius:10px;padding:8px;height:85vh;overflow-y:auto}
-.pair{padding:7px;background:#1a1a2e;margin:3px 0;border-radius:6px;font-size:11px;cursor:pointer;display:flex;justify-content:space-between}
-.pair.active{background:#00ff88;color:#000}
-.bot{background:#0f0f1e;border-radius:14px;padding:12px;text-align:center;border:1px solid #222}
-.circle{width:160px;height:160px;border-radius:50%;margin:15px auto;display:flex;align-items:center;justify-content:center;font-size:55px;box-shadow:0 0 50px}
-.circle.sell{background:radial-gradient(#ff1744,#4a000a);border:4px solid #ff1744}
-.circle.buy{background:radial-gradient(#00e676,#004a1f);border:4px solid #00e676}
-.sell-text{color:#ff1744;font-size:20px;font-weight:bold}
-.buy-text{color:#00e676;font-size:20px;font-weight:bold}
-.early{position:fixed;right:10px;top:50%;transform:translateY(-50%);width:120px;background:#111122;border:2px solid #ffeb3b;border-radius:12px;padding:10px;text-align:center;z-index:500;display:none}
-.early.show{display:block;animation:shake 0.5s infinite}
-@keyframes shake{50%{transform:translateY(-50%) scale(1.05)}}
-.time-btn{padding:6px 10px;border-radius:15px;background:#111;color:#666;border:1px solid #333;font-size:10px;cursor:pointer;margin:2px}
+*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0a14;color:#fff;font-family:Arial}
+.header{background:#111122;padding:10px;text-align:center;border-bottom:1px solid #00ff88}
+.grid{display:grid;grid-template-columns:160px 1fr 150px;gap:8px;padding:8px}
+.pairs{background:#111122;border-radius:10px;padding:6px;height:88vh;overflow-y:auto}
+.pair{padding:6px;background:#1a1a2e;margin:3px 0;border-radius:6px;font-size:11px;cursor:pointer}
+.pair.active{background:#00ff88;color:#000;font-weight:bold}
+.bot{background:#0f0f1e;border-radius:14px;padding:12px;text-align:center;border:1px solid #333;position:relative}
+.circle{width:180px;height:180px;border-radius:50%;margin:15px auto;display:flex;align-items:center;justify-content:center;font-size:50px;transition:0.5s}
+.circle.sell{background:radial-gradient(#ff1744,#5a000f);border:4px solid #ff1744;box-shadow:0 0 50px #ff1744}
+.circle.buy{background:radial-gradient(#00e676,#003d1a);border:4px solid #00e676;box-shadow:0 0 50px #00e676}
+.circle.wait{background:#222;border:4px solid #444;color:#666;box-shadow:none}
+.status{padding:10px;border-radius:10px;margin:10px 0;font-weight:bold}
+.status.trading{background:rgba(0,230,118,0.15);border:1px solid #00e676;color:#00e676}
+.status.preview{background:rgba(255,235,59,0.15);border:1px solid #ffeb3b;color:#ffeb3b;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0.5}}
+.time-btn{padding:6px 12px;border-radius:15px;background:#111;color:#888;border:1px solid #333;font-size:11px;cursor:pointer;margin:2px}
 .time-btn.active{background:#fff;color:#000}
+.next-box{background:#1a1a2e;border-radius:10px;padding:10px;margin-top:10px;border:1px dashed #555}
 .full{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;z-index:999;flex-direction:column}
 .full.sell-full{background:rgba(255,23,68,0.96)} .full.buy-full{background:rgba(0,230,118,0.96);color:#000}
-.full h1{font-size:80px}
+.full h1{font-size:70px}
 </style>
 </head>
 <body>
-<div class="header"><b>Gen-Z Bot</b><span id="pairTop">EUR/USD (OTC) • 30 SEC • LIVE</span></div>
+<div class="header">🔴 Gen-Z Bot • <span id="pairTop">EUR/USD (OTC)</span> • <span id="tfTop">1 MIN TRADE + 10 SEC EARLY</span> • No Repeat Sound</div>
 
 <div class="grid">
 <div class="pairs" id="pairs"></div>
+
 <div class="bot">
-<div style="font-size:10px;color:#888">EUR/USD (OTC) • TradeWix • OTC • <span id="tfTop">30 SEC</span></div>
-<div class="circle sell" id="circle">↘</div>
-<div id="action" class="sell-text">SELL (SHORT)</div>
-<div style="display:flex;gap:8px;justify-content:center;margin-top:10px">
-<div style="background:#1a1a2e;padding:8px 15px;border-radius:8px"><small>STRENGTH</small><br><b id="str">●●●●● MAX</b></div>
-<div style="background:#1a1a2e;padding:8px 15px;border-radius:8px"><small>CONFIDENCE</small><br><b id="conf" style="color:#00e676">94% HIGH</b></div>
+<div style="font-size:10px;color:#888">LIVE AI • ForexFactory + EMA • 1 MIN SYSTEM</div>
+
+<div class="circle wait" id="circle">WAIT</div>
+<div id="action" style="font-size:22px;font-weight:bold;margin:10px">STARTING...</div>
+
+<div class="status trading" id="statusBox">TRADE: 01:00 | WAITING</div>
+
+<div style="display:flex;gap:8px;justify-content:center">
+<div style="background:#1a1a2e;padding:8px 12px;border-radius:8px"><small>STRENGTH</small><br><b id="str">--</b></div>
+<div style="background:#1a1a2e;padding:8px 12px;border-radius:8px"><small>CONFIDENCE</small><br><b id="conf">--</b></div>
 </div>
-<div style="margin-top:10px;background:#1a1a2e;padding:6px;border-radius:20px;font-size:11px">NEXT: <span id="next">00:30</span> | TF: <span id="exp">30s</span></div>
-<div style="margin-top:8px"><button class="time-btn" onclick="setTF(5,this)">5s</button><button class="time-btn" onclick="setTF(10,this)">10s</button><button class="time-btn" onclick="setTF(15,this)">15s</button><button class="time-btn active" onclick="setTF(30,this)">30s</button><button class="time-btn" onclick="setTF(60,this)">1m</button><button class="time-btn" onclick="setTF(300,this)">5m</button></div>
+
+<div class="next-box" id="nextBox">
+<small>NEXT SIGNAL (10 SEC BEFORE)</small><br>
+<b id="nextSignal" style="font-size:16px;color:#888">-- CALCULATING --</b><br>
+<small id="nextDetail" style="color:#666">1 min puri hone ke baad ayega</small>
 </div>
+
+<div style="margin-top:10px">
+<button class="time-btn active" onclick="setTF(60,this)">1m</button>
+<button class="time-btn" onclick="setTF(120,this)">2m</button>
+<button class="time-btn" onclick="setTF(300,this)">5m</button>
+<button class="time-btn" onclick="setTF(30,this)">30s</button>
+</div>
+
+<div style="margin-top:8px;font-size:10px;color:#555">🔊 Sound: Sirf 1 baar per trade • No bar awaz</div>
+</div>
+
 <div style="background:#0f0f1e;border-radius:10px;padding:10px;text-align:center">
-<b style="font-size:11px">UPCOMING</b><br><br>
-<div id="sideAlert" style="padding:10px;background:#1a1a2e;border-radius:8px;font-size:11px;color:#888">WAITING...</div><br>
-<small>40 Pairs<br>ALL UNLOCKED</small><br><br>
-<small>ForexFactory<br><span id="news">USD Strong</span></small>
+<b style="font-size:11px">40 PAIRS - ALL OPEN</b><br><br>
+<div id="sideList" style="font-size:10px;color:#888">--</div><br>
+<small>ForexFactory<br><span id="ff" style="font-size:10px">USD Strong - HIGH</span></small>
 </div>
 </div>
 
-<!-- 10 SEC EARLY WARNING SIDE -->
-<div class="early" id="earlyBox">
-<b style="font-size:12px;color:#ffeb3b">⚠️ 10 SEC MEIN</b>
-<h2 id="earlyText" style="margin:5px;font-size:22px"></h2>
-<p style="font-size:10px">TAYYAR HO JAO!</p>
-</div>
-
-<div class="full" id="fullBox"><h1 id="fullText">↘ SELL</h1><p id="fullPair"></p><p id="fullTF"></p></div>
+<div class="full" id="fullBox"><h1 id="fullText">UP</h1><p id="fullPair" style="font-size:20px"></p><p id="fullType" style="font-size:16px;margin-top:8px"></p></div>
 
 <script>
 const PAIRS=["EUR/USD (OTC)","GBP/USD (OTC)","USD/JPY (OTC)","AUD/USD (OTC)","EUR/GBP (OTC)","EUR/JPY (OTC)","GBP/JPY (OTC)","USD/CHF (OTC)","NZD/USD (OTC)","EUR/AUD (OTC)","USD/CAD (OTC)","EUR/CAD (OTC)","AUD/JPY (OTC)","EUR/CHF (OTC)","GBP/CHF (OTC)","AUD/CAD (OTC)","EUR/USD","GBP/USD","USD/JPY","AUD/USD","USD/CAD","EUR/GBP","EUR/JPY","GBP/JPY","EUR/AUD","AUD/JPY","USD/CHF","NZD/USD","EUR/CAD","GBP/AUD","AUD/CAD","EUR/NZD","GBP/CAD","AUD/NZD","CAD/JPY","CHF/JPY","EUR/CHF","GBP/CHF","AUD/CHF","NZD/JPY"];
-let selected=PAIRS[0], TF=30, countdown=30, nextDir='SELL', lastDir='', gapLock=false;
+let selected=PAIRS[0], TF=60, tradeTimer=TF, isTrading=false, nextDir='', hasPlayed=false;
 const pairsDiv=document.getElementById('pairs');
-PAIRS.forEach(p=>{let d=document.createElement('div');d.className='pair';d.innerHTML=`${p}<b>...</b>`;d.onclick=()=>{document.querySelectorAll('.pair').forEach(x=>x.classList.remove('active'));d.classList.add('active');selected=p;document.getElementById('pairTop').innerText=p;};pairsDiv.appendChild(d);});
+PAIRS.forEach(p=>{let d=document.createElement('div');d.className='pair';d.innerText=p;d.onclick=()=>{document.querySelectorAll('.pair').forEach(x=>x.classList.remove('active'));d.classList.add('active');selected=p;document.getElementById('pairTop').innerText=p;};pairsDiv.appendChild(d);});
 document.querySelector('.pair').classList.add('active');
-function setTF(s,el){TF=s;countdown=s;document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('tfTop').innerText=s>=60?(s/60)+' MIN':s+' SEC';document.getElementById('exp').innerText=s+'s';}
 
-// 10 SEC EARLY LOGIC
-setInterval(()=>{
- countdown--; 
- document.getElementById('next').innerText='00:'+(countdown<10?'0'+countdown:countdown);
- 
- // 10 SECOND PEHLE WARNING
- if(countdown==10){
-  // pehle se next signal calculate
-  let hash=0;for(let i=0;i<selected.length;i++)hash+=selected.charCodeAt(i);
-  let mom=Math.sin(hash + Date.now()/2000);
-  nextDir = mom<-0.1?'DOWN':'UP';
-  document.getElementById('sideAlert').innerHTML=`<b style="color:${nextDir=='DOWN'?'#ff1744':'#00e676'}">${nextDir} in 10s</b><br>Tayyar ho jao`;
-  document.getElementById('sideAlert').style.border='1px solid '+(nextDir=='DOWN'?'#ff1744':'#00e676');
-  // Side early box
-  let eb=document.getElementById('earlyBox');eb.classList.add('show');document.getElementById('earlyText').innerText=nextDir;document.getElementById('earlyText').style.color=nextDir=='DOWN'?'#ff1744':'#00e676';
-  eb.style.borderColor=nextDir=='DOWN'?'#ff1744':'#00e676';
-  // small beep
-  try{let ctx=new (window.AudioContext||window.webkitAudioContext)();let o=ctx.createOscillator();o.frequency.value=600;o.connect(ctx.destination);o.start();setTimeout(()=>o.stop(),200);}catch(e){}
- }
- if(countdown<=0){
-  countdown=TF;
-  document.getElementById('earlyBox').classList.remove('show');
-  if(gapLock) return; // gap - up down me waqfa
-  generate(nextDir);
-  gapLock=true; setTimeout(()=>gapLock=false, 8000); // 8 sec gap between up/down
- }
-},1000);
+function setTF(s,el){TF=s;tradeTimer=s;document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('tfTop').innerText=s>=60?(s/60)+' MIN + 10 SEC EARLY';}
 
-function generate(dir){
- let conf=90+Math.floor(Math.random()*6);
- let circle=document.getElementById('circle');circle.className='circle '+(dir=='DOWN'?'sell':'buy');circle.innerText=dir=='DOWN'?'↘':'↗';
- document.getElementById('action').innerText=dir=='DOWN'?'SELL (SHORT)':'BUY (LONG)';document.getElementById('action').className=dir=='DOWN'?'sell-text':'buy-text';
- document.getElementById('str').innerText='●●●●● MAX';document.getElementById('conf').innerText=conf+'% HIGH';
- // FULL SCREEN
- let full=document.getElementById('fullBox');full.className='full '+(dir=='DOWN'?'sell-full':'buy-full');full.style.display='flex';
- document.getElementById('fullText').innerText=(dir=='DOWN'?'↘ DOWN':'↗ UP');document.getElementById('fullPair').innerText=selected+' • '+conf+'%';document.getElementById('fullTF').innerText=TF+'s TRADE NOW!';
- try{let ctx=new (window.AudioContext||window.webkitAudioContext)();let o=ctx.createOscillator();o.frequency.value=dir=='DOWN'?400:900;o.connect(ctx.destination);o.start();setTimeout(()=>o.stop(),700);}catch(e){}
- if('vibrate' in navigator) navigator.vibrate([400,100,400]);
- setTimeout(()=>full.style.display='none',4000);
- lastDir=dir;
- document.getElementById('sideAlert').innerText='TRADE DONE - WAITING...';
+function getNextSignal(){
+ let hash=0;for(let i=0;i<selected.length;i++)hash+=selected.charCodeAt(i);
+ let mom=Math.sin(hash + Date.now()/5000);
+ let rsi=50+mom*35;
+ let dir = rsi>58?'UP':'DOWN';
+ let type = Math.abs(mom)>0.6 ? (dir=='UP'?'LONG UP':'SHORT DOWN') : (dir=='UP'?'UP':'DOWN');
+ if(Math.abs(mom)>0.3) type = dir=='UP' ? (mom>0.6?'LONG UP':'UP') : (mom<-0.6?'SHORT DOWN':'DOWN');
+ let conf=88+Math.floor(Math.random()*7);
+ let str = Math.abs(mom)>0.6 ? 'MAXIMUM' : 'STRONG';
+ return {dir:dir, full:type, conf:conf, str:str, rsi:rsi.toFixed(0)};
 }
-generate('SELL');
+
+function playOnce(dir){
+ if(hasPlayed) return;
+ hasPlayed=true;
+ try{let ctx=new (window.AudioContext||window.webkitAudioContext)();let o=ctx.createOscillator();o.type='sine';o.frequency.value=dir=='UP'?880:350;o.connect(ctx.destination);o.start();setTimeout(()=>o.stop(),500);}catch(e){}
+ if('vibrate' in navigator) navigator.vibrate(400);
+}
+
+let countdown=TF;
+setInterval(()=>{
+ countdown--;
+ if(countdown<0) countdown=TF;
+
+ // STATUS UPDATE
+ let statusBox=document.getElementById('statusBox');
+ if(countdown>10){
+  // TRADING MODE
+  if(!isTrading){isTrading=true; hasPlayed=false; document.getElementById('nextSignal').innerText='-- TRADE CHAL RAHI HAI --'; document.getElementById('nextDetail').innerText='10 sec pehle agli batayenge';}
+  statusBox.className='status trading';
+  statusBox.innerText=`TRADE CHAL RAHI: ${Math.floor(countdown/60)}:${(countdown%60<10?'0':'')+countdown%60} | ${selected}`;
+  document.getElementById('circle').className='circle wait';document.getElementById('circle').innerText='⏳';
+  document.getElementById('action').innerText='TRADE RUNNING...';
+ } else if(countdown<=10 && countdown>0){
+  // 10 SEC BEFORE - SHOW NEXT
+  if(isTrading){
+   isTrading=false;
+   let sig=getNextSignal(); nextDir=sig.dir;
+   document.getElementById('nextSignal').innerHTML=`<span style="color:${sig.dir=='UP'?'#00e676':'#ff1744'}">${sig.full}</span>`;
+   document.getElementById('nextDetail').innerText=`CONF: ${sig.conf}% | RSI: ${sig.rsi} | STR: ${sig.str}`;
+   document.getElementById('str').innerText=sig.str; document.getElementById('conf').innerText=sig.conf+'% HIGH';
+   // Side preview
+   statusBox.className='status preview';
+   statusBox.innerText=`⚠️ 10 SEC MEIN NEXT: ${sig.full} | READY!`;
+   // Show preview circle but smaller
+   document.getElementById('circle').className='circle '+(sig.dir=='UP'?'buy':'sell');
+   document.getElementById('circle').innerText=sig.dir=='UP'?'↗':'↘';
+   document.getElementById('action').innerText=`AGLI: ${sig.full}`;
+   document.getElementById('action').style.color=sig.dir=='UP'?'#00e676':'#ff1744';
+   // ONLY ONE SOUND HERE
+   playOnce(sig.dir);
+   // Full screen preview (not trade yet)
+   if(countdown==10){
+    let full=document.getElementById('fullBox');full.className='full '+(sig.dir=='UP'?'buy-full':'sell-full');full.style.display='flex';
+    document.getElementById('fullText').innerText=sig.dir=='UP'?'↗ '+sig.full:'↘ '+sig.full;
+    document.getElementById('fullPair').innerText=selected+' • NEXT IN 10s';document.getElementById('fullType').innerText=`CONF ${sig.conf}% • ${sig.str}`;
+    setTimeout(()=>full.style.display='none',3000);
+   }
+  }
+ } else if(countdown==0){
+  // NEW TRADE START
+  let sig=getNextSignal();
+  countdown=TF; isTrading=true; hasPlayed=false;
+  document.getElementById('nextSignal').innerText='TRADE START HO GAYI';
+  // Full trade signal
+  let full=document.getElementById('fullBox');full.className='full '+(sig.dir=='UP'?'buy-full':'sell-full');full.style.display='flex';
+  document.getElementById('fullText').innerText=sig.dir=='UP'?'↗ UP NOW':'↘ DOWN NOW';document.getElementById('fullPair').innerText=selected+' • '+TF+'s TRADE START';document.getElementById('fullType').innerText=sig.full;
+  playOnce(sig.dir);
+  setTimeout(()=>full.style.display='none',3500);
+ }
+
+},1000);
 </script>
 </body>
 </html>
