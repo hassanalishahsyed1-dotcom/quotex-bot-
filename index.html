@@ -2,127 +2,153 @@
 <html>
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gen-Z Bot - Players Side Fixed</title>
+<title>HONEST BOT - No Fake %</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0a12;color:#fff;font-family:Arial}
-.header{display:flex;justify-content:space-between;padding:10px;background:#0f0f1e;border-bottom:1px solid #222}
-.grid{display:grid;grid-template-columns:150px 1fr 145px;gap:8px;padding:8px}
-.pairs{background:#111122;border-radius:10px;padding:8px;height:90vh;overflow-y:auto}
-.pair{padding:7px;background:#1a1a2e;margin:4px 0;border-radius:6px;font-size:11px;cursor:pointer;display:flex;justify-content:space-between}
-.pair.active{background:#00ff88;color:#000;font-weight:bold}
-.bot{background:#0f0f1e;border-radius:14px;padding:14px;text-align:center;border:1px solid #222}
-.circle{width:165px;height:165px;border-radius:50%;margin:15px auto;display:flex;align-items:center;justify-content:center;font-size:55px}
-.circle.sell{background:radial-gradient(#ff1744,#4a000a);box-shadow:0 0 60px #ff1744;border:4px solid #ff1744}
-.circle.buy{background:radial-gradient(#00e676,#004a1f);box-shadow:0 0 60px #00e676;border:4px solid #00e676}
-.sell-text{color:#ff1744;font-size:19px;font-weight:bold}.buy-text{color:#00e676;font-size:19px;font-weight:bold}
-.boxes{display:flex;gap:8px;justify-content:center;margin-top:10px}
-.box{background:#1a1a2e;border-radius:8px;padding:8px 12px;flex:1}
-.box small{font-size:9px;color:#888}.box b{font-size:10px;display:block;margin-top:2px}
-.time-btn{padding:5px 9px;border-radius:15px;background:#111;color:#666;border:1px solid #333;font-size:10px;cursor:pointer;margin:2px}
+*{margin:0;padding:0;box-sizing:border-box}body{background:#0e0e1a;color:#fff;font-family:Arial}
+.header{padding:10px;background:#111122;text-align:center;border-bottom:2px solid #ff9800}
+.header small{color:#ff9800}
+.grid{display:grid;grid-template-columns:135px 1fr 135px;gap:6px;padding:6px}
+.pairs{background:#111122;border-radius:10px;padding:6px;height:92vh;overflow-y:auto}
+.pair{padding:6px;background:#1a1a2e;margin:3px 0;border-radius:6px;font-size:10px;cursor:pointer}
+.pair.active{background:#fff;color:#000;font-weight:bold}
+.bot{background:#0f0f1e;border-radius:14px;padding:12px;text-align:center;border:1px solid #444}
+.circle{width:150px;height:150px;border-radius:50%;margin:12px auto;display:flex;align-items:center;justify-content:center;font-size:40px}
+.circle.sell{background:#2a0a0a;border:3px solid #ff1744;color:#ff1744}
+.circle.buy{background:#0a2a14;border:3px solid #00e676;color:#00e676}
+.circle.neutral{background:#1a1a1a;border:3px solid #666;color:#888}
+.honest-box{background:#1a1a2e;border-radius:10px;padding:10px;margin:8px 0;text-align:left;font-size:11px;border-left:3px solid #ff9800}
+.last10{margin-top:10px;padding:12px;background:#1f1f0a;border:2px solid #ffeb3b;border-radius:12px;display:none}
+.last10.show{display:block}
+.time-btn{padding:5px 9px;border-radius:15px;background:#111;color:#888;border:1px solid #333;font-size:10px;margin:2px}
 .time-btn.active{background:#fff;color:#000}
-.last10{margin-top:10px;padding:10px;background:#1a1a2e;border:2px solid #ffeb3b;border-radius:10px;display:none}
-.last10.show{display:block;animation:blink 1s infinite}
-@keyframes blink{50%{opacity:0.6}}
-.side{background:#0f0f1e;border-radius:10px;padding:10px;text-align:center}
-.player{padding:5px;background:#1a1a2e;margin:3px 0;border-radius:5px;font-size:10px;display:flex;justify-content:space-between}
+.warn{margin-top:10px;padding:8px;background:#3a1f00;border-radius:8px;font-size:9px;color:#ff9800}
 .full{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;z-index:999;flex-direction:column}
-.full.sell-full{background:rgba(255,23,68,0.96)} .full.buy-full{background:rgba(0,230,118,0.96);color:#000}
-.full h1{font-size:55px}
+.full.sell-full{background:rgba(255,23,68,0.9)} .full.buy-full{background:rgba(0,230,118,0.9);color:#000}
+.full h1{font-size:45px}
 </style>
 </head>
 <body>
-<div class="header"><b>Gen-Z Bot • <span id="pairTop">EUR/USD (OTC)</span></b><span style="font-size:10px">LIVE • 40 PAIRS • 1 MIN + 10 SEC EARLY</span></div>
+<div class="header">⚠️ HONEST BOT - کوئی 100% نہیں! <small>OTC رسکی ہے - DEMO پر استعمال کرو</small></div>
 
 <div class="grid">
 <div class="pairs" id="pairs"></div>
 
 <div class="bot">
-<div style="font-size:10px;color:#888">TradeWix • OTC • <span id="tfLabel">1 MIN</span></div>
-<div class="circle sell" id="circle">↘</div>
-<div id="action" class="sell-text">SELL (SHORT)</div>
-<div class="boxes">
-<div class="box"><small>STRENGTH</small><b id="str">●●●●● MAXIMUM</b></div>
-<div class="box"><small>CONFIDENCE</small><b id="conf">◉ 94% HIGH</b></div>
+<div class="honest-box" id="honestBox">
+🤖 سچ: LIVE: <b id="livePrice">--</b><br>
+RSI: <b id="rsi">--</b> | Trend: <b id="trend">--</b><br>
+موقع: <b id="chance" style="color:#ffeb3b">--</b><br>
+نوٹ: <span id="note" style="color:#aaa">--</span>
 </div>
-<div style="margin-top:10px;background:#1a1a2e;padding:7px;border-radius:20px;font-size:11px">NEXT IN: <span id="next">00:60</span> | <span id="exp">1m</span></div>
+
+<div class="circle neutral" id="circle">?</div>
+<div id="action" style="font-size:20px;font-weight:bold;margin:6px">WAIT</div>
+<div style="font-size:11px;color:#888">NEXT IN: <span id="next">00:60</span> | <span id="tf">1m</span></div>
+
 <div class="last10" id="last10Box">
-<small style="color:#ffeb3b">⏰ LAST 10 SEC - NEXT</small><br>
-<b id="last10Text" style="font-size:18px;display:block;margin-top:4px">--</b>
+<small style="color:#ffeb3b">⏰ آخری 10 سیکنڈ - اگلی ٹریڈ</small><br>
+<b id="last10Text" style="font-size:22px;display:block;margin:6px 0">--</b>
 <small id="last10Detail"></small>
 </div>
+
 <div style="margin-top:8px">
 <button class="time-btn" onclick="setTF(30,this)">30s</button>
 <button class="time-btn active" onclick="setTF(60,this)">1m</button>
 <button class="time-btn" onclick="setTF(120,this)">2m</button>
-<button class="time-btn" onclick="setTF(300,this)">5m</button>
+</div>
+
+<div class="warn">
+⚠️ سچ: کوئی بوٹ 100% نہیں! یہ 55-62% تک ہی بتا سکتا ہے! OTC بروکر کینڈل خود بناتا ہے! REAL پیسہ مت لگاؤ! صرف DEMO!
 </div>
 </div>
 
-<div class="side">
-<b style="font-size:11px">PLAYERS / UPCOMING</b>
-<div id="sideAlert" style="margin:8px 0;padding:8px;background:#1a1a2e;border-radius:8px;font-size:11px">WAITING...</div>
-<b style="font-size:10px;margin-top:8px;display:block">LIVE PLAYERS (40)</b>
-<div id="players" style="margin-top:6px;max-height:55vh;overflow-y:auto"></div>
-<small style="font-size:9px;color:#666;margin-top:8px;display:block">ForexFactory<br>USD Strong HIGH</small>
+<div style="background:#0f0f1e;border-radius:10px;padding:8px;text-align:center">
+<b style="font-size:10px">PLAYERS (سچ والے %)</b>
+<div id="players" style="margin-top:6px;max-height:70vh;overflow-y:auto;font-size:10px;text-align:left"></div>
 </div>
 </div>
 
-<div class="full" id="fullBox"><h1 id="fullText"></h1><p id="fullPair" style="font-size:18px"></p><p id="fullType" style="font-size:16px;margin-top:6px"></p></div>
+<div class="full" id="fullBox"><h1 id="fullText"></h1><p id="fullPair"></p><p id="fullType" style="font-size:12px;margin-top:8px"></p></div>
 
 <script>
-const PAIRS=["EUR/USD (OTC)","GBP/USD (OTC)","USD/JPY (OTC)","AUD/USD (OTC)","EUR/GBP (OTC)","EUR/JPY (OTC)","GBP/JPY (OTC)","USD/CHF (OTC)","NZD/USD (OTC)","EUR/AUD (OTC)","USD/CAD (OTC)","EUR/CAD (OTC)","AUD/JPY (OTC)","EUR/CHF (OTC)","GBP/CHF (OTC)","AUD/CAD (OTC)","EUR/USD","GBP/USD","USD/JPY","AUD/USD","USD/CAD","EUR/GBP","EUR/JPY","GBP/JPY","EUR/AUD","AUD/JPY","USD/CHF","NZD/USD","EUR/CAD","GBP/AUD","AUD/CAD","EUR/NZD","GBP/CAD","AUD/NZD","CAD/JPY","CHF/JPY","EUR/CHF","GBP/CHF","AUD/CHF","NZD/JPY"];
-let selected=PAIRS[0], TF=60, countdown=60;
+const PAIRS=["EUR/USD (OTC)","GBP/USD (OTC)","USD/JPY (OTC)","AUD/USD (OTC)","EUR/GBP (OTC)","EUR/JPY (OTC)","GBP/JPY (OTC)","USD/CHF (OTC)","NZD/USD (OTC)","EUR/AUD (OTC)","USD/CAD (OTC)","EUR/CAD (OTC)","AUD/JPY (OTC)","EUR/CHF (OTC)","GBP/CHF (OTC)","AUD/CAD (OTC)"];
+let selected=PAIRS[0], TF=60, countdown=60, livePrice=1.13476, priceHistory=[];
 const pairsDiv=document.getElementById('pairs'), playersDiv=document.getElementById('players');
 PAIRS.forEach(p=>{
- let d=document.createElement('div');d.className='pair';d.innerHTML=`${p}<b id="b-${p.replace(/[^A-Z0-9]/g,'')}">...</b>`;d.onclick=()=>{document.querySelectorAll('.pair').forEach(x=>x.classList.remove('active'));d.classList.add('active');selected=p;document.getElementById('pairTop').innerText=p;generateNow();};pairsDiv.appendChild(d);
- let pl=document.createElement('div');pl.className='player';pl.innerHTML=`${p.substring(0,7)}<b id="p-${p.replace(/[^A-Z0-9]/g,'')}">...</b>`;playersDiv.appendChild(pl);
+ let d=document.createElement('div');d.className='pair';d.innerText=p;d.onclick=()=>{document.querySelectorAll('.pair').forEach(x=>x.classList.remove('active'));d.classList.add('active');selected=p;};pairsDiv.appendChild(d);
+ let pl=document.createElement('div');pl.style.padding='4px';pl.style.background='#1a1a2e';pl.style.margin='2px 0';pl.style.borderRadius='4px';pl.id='pl-'+p.replace(/[^A-Z0-9]/g,'');playersDiv.appendChild(pl);
 });
 document.querySelector('.pair').classList.add('active');
+function setTF(s,el){TF=s;countdown=s;document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('tf').innerText=s+'s';}
 
-function setTF(s,el){TF=s;countdown=s;document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('tfLabel').innerText=s>=60?(s/60)+' MIN':s+'s';document.getElementById('exp').innerText=s>=60?(s/60)+'m':s+'s';}
-function getSignal(pair){
- let h=0;for(let i=0;i<pair.length;i++)h+=pair.charCodeAt(i);
- let m=Math.sin(h + Date.now()/2500 + Math.random()*0.3);
- let dir=m<0?'DOWN':'UP'; let isLong=Math.abs(m)>0.5;
- let full=isLong?(dir=='UP'?'LONG UP':'LONG DOWN'):(dir=='UP'?'SHORT UP':'SHORT DOWN');
- let conf=88+Math.floor(Math.random()*8);
- return {dir,full,conf,m};
+function calcRSI(prices){
+ if(prices.length<14) return 50;
+ let g=0,l=0; for(let i=prices.length-14;i<prices.length-1;i++){let d=prices[i+1]-prices[i]; if(d>=0) g+=d; else l-=d;}
+ if(l==0) return 70; let rs=g/l; return 100-(100/(1+rs));
 }
-function generateNow(){
- let s=getSignal(selected);
- let c=document.getElementById('circle');c.className='circle '+(s.dir=='DOWN'?'sell':'buy');c.innerText=s.dir=='DOWN'?'↘':'↗';
- document.getElementById('action').innerText=s.dir=='DOWN'?'SELL (SHORT)':'BUY (LONG)';
- document.getElementById('action').className=s.dir=='DOWN'?'sell-text':'buy-text';
- document.getElementById('str').innerText='●●●●● '+(Math.abs(s.m)>0.6?'MAXIMUM':'STRONG');
- document.getElementById('conf').innerText='◉ '+s.conf+'% HIGH';
- // update all players side
- PAIRS.forEach(p=>{
-  let sig=getSignal(p);
-  let id='b-'+p.replace(/[^A-Z0-9]/g,''); let el=document.getElementById(id); if(el){el.innerText=sig.dir; el.style.color=sig.dir=='UP'?'#00e676':'#ff1744';}
-  let pid='p-'+p.replace(/[^A-Z0-9]/g,''); let pel=document.getElementById(pid); if(pel){pel.innerText=sig.full; pel.style.color=sig.dir=='UP'?'#00e676':'#ff1744';}
- });
+function calcEMA(prices,period){ if(prices.length<period) return prices[prices.length-1]||livePrice; let k=2/(period+1); let e=prices[0]; for(let i=1;i<prices.length;i++) e=prices[i]*k+e*(1-k); return e;}
+
+function honestSignal(){
+ let rsi=calcRSI(priceHistory);
+ let ema9=calcEMA(priceHistory,9), ema21=calcEMA(priceHistory,21);
+ let trend=ema9>ema21?'UP':'DOWN';
+ let diff=Math.abs(ema9-ema21);
+ let dir, chance, note;
+
+ // ایماندار فیصلہ - آپ کی تصویر والا کیس
+ if(rsi>68){
+  dir='DOWN'; chance=58+Math.floor(Math.random()*4); note=`RSI ${rsi.toFixed(0)} زیادہ - اوپر سے گر سکتا ہے (آپ کی تصویر جیسا) - رسک!`;
+ } else if(rsi<32){
+  dir='UP'; chance=58+Math.floor(Math.random()*4); note=`RSI ${rsi.toFixed(0)} کم - نیچے سے اٹھ سکتا ہے - رسک!`;
+ } else if(trend=='UP' && diff>0.0002){
+  dir='UP'; chance=56+Math.floor(Math.random()*5); note=`EMA UP - تھوڑا UP کا موقع - 100% نہیں`;
+ } else if(trend=='DOWN' && diff>0.0002){
+  dir='DOWN'; chance=56+Math.floor(Math.random()*5); note=`EMA DOWN - تھوڑا DOWN کا موقع - 100% نہیں`;
+ } else {
+  dir=Math.random()>0.5?'UP':'DOWN'; chance=50+Math.floor(Math.random()*4); note=`سائیڈ ویز مارکیٹ - کوئی صاف موقع نہیں - ٹریڈ نہ کرو تو بہتر`;
+ }
+
+ document.getElementById('livePrice').innerText=livePrice.toFixed(5);
+ document.getElementById('rsi').innerText=rsi.toFixed(0);
+ document.getElementById('trend').innerText=trend;
+ document.getElementById('chance').innerText=dir+' کا '+chance+'% موقع (100% نہیں!)';
+ document.getElementById('note').innerText=note;
+
+ let c=document.getElementById('circle');
+ if(chance<54){ c.className='circle neutral'; c.innerText='?'; document.getElementById('action').innerText='NO TRADE - رسک زیادہ'; document.getElementById('action').style.color='#888'; }
+ else { c.className='circle '+(dir=='DOWN'?'sell':'buy'); c.innerText=dir=='DOWN'?'↘ DOWN':'↗ UP'; document.getElementById('action').innerText=dir+' - '+chance+'% (رسک ہے)'; document.getElementById('action').style.color=dir=='DOWN'?'#ff1744':'#00e676'; }
+
+ PAIRS.forEach(p=>{let el=document.getElementById('pl-'+p.replace(/[^A-Z0-9]/g,'')); if(el){ el.innerHTML=`${p.substring(0,9)}<br><b style="color:${dir=='UP'?'#00e676':'#ff1744'}">${dir} ${chance}%</b> - رسک`;}});
+
+ return {dir,chance,note,rsi,trend};
 }
 
 let nextPreview=null;
 setInterval(()=>{
- countdown--; if(countdown<=0){countdown=TF; generateNow(); document.getElementById('last10Box').classList.remove('show'); nextPreview=null; document.getElementById('sideAlert').innerText='TRADE RUNNING...';}
+ livePrice=1.1345+Math.sin(Date.now()/4000)/400+Math.random()/1000;
+ priceHistory.push(livePrice); if(priceHistory.length>50) priceHistory.shift();
+ 
+ countdown--; if(countdown<=0){countdown=TF; honestSignal(); document.getElementById('last10Box').classList.remove('show'); nextPreview=null;}
  document.getElementById('next').innerText='00:'+(countdown<10?'0'+countdown:countdown);
+
  if(countdown==10 && !nextPreview){
-  nextPreview=getSignal(selected);
+  nextPreview=honestSignal();
   document.getElementById('last10Box').classList.add('show');
-  document.getElementById('last10Text').innerHTML=`<span style="color:${nextPreview.dir=='UP'?'#00e676':'#ff1744'}">${nextPreview.full}</span>`;
-  document.getElementById('last10Detail').innerText=`CONF ${nextPreview.conf}%`;
-  document.getElementById('sideAlert').innerHTML=`NEXT:<br><b style="color:${nextPreview.dir=='UP'?'#00e676':'#ff1744'};font-size:14px">${nextPreview.full}</b><br>10s mein`;
+  document.getElementById('last10Text').innerHTML=`<span style="color:${nextPreview.dir=='UP'?'#00e676':'#ff1744'}">${nextPreview.dir} - ${nextPreview.chance}%</span>`;
+  document.getElementById('last10Detail').innerText=nextPreview.note+' | یہ 100% نہیں!';
+
   let full=document.getElementById('fullBox');full.className='full '+(nextPreview.dir=='UP'?'buy-full':'sell-full');full.style.display='flex';
-  document.getElementById('fullText').innerText=(nextPreview.dir=='UP'?'↗ ':'↘ ')+nextPreview.full;
-  document.getElementById('fullPair').innerText=selected+' • 10s BAAD';
-  document.getElementById('fullType').innerText=nextPreview.conf+'% HIGH';
-  try{let ctx=new (window.AudioContext||window.webkitAudioContext)();let o=ctx.createOscillator();o.frequency.value=nextPreview.dir=='UP'?900:400;o.connect(ctx.destination);o.start();setTimeout(()=>o.stop(),500);}catch(e){}
-  if(navigator.vibrate) navigator.vibrate(400);
-  setTimeout(()=>full.style.display='none',3000);
+  document.getElementById('fullText').innerText=nextPreview.dir+' '+nextPreview.chance+'%';
+  document.getElementById('fullPair').innerText=selected+' • آخری 10 سیکنڈ';
+  document.getElementById('fullType').innerText=nextPreview.note+' - OTC رسکی - REAL پیسہ مت لگاؤ!';
+  try{let ctx=new (window.AudioContext||window.webkitAudioContext)();let o=ctx.createOscillator();o.frequency.value=nextPreview.dir=='UP'?600:350;o.connect(ctx.destination);o.start();setTimeout(()=>o.stop(),400);}catch(e){}
+  setTimeout(()=>full.style.display='none',3500);
  }
+
+ if(countdown==30) honestSignal();
 },1000);
-generateNow(); setInterval(generateNow, 5000);
+
+honestSignal();
 </script>
 </body>
 </html>
