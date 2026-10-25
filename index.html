@@ -1,154 +1,116 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HONEST BOT - No Fake %</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}body{background:#0e0e1a;color:#fff;font-family:Arial}
-.header{padding:10px;background:#111122;text-align:center;border-bottom:2px solid #ff9800}
-.header small{color:#ff9800}
-.grid{display:grid;grid-template-columns:135px 1fr 135px;gap:6px;padding:6px}
-.pairs{background:#111122;border-radius:10px;padding:6px;height:92vh;overflow-y:auto}
-.pair{padding:6px;background:#1a1a2e;margin:3px 0;border-radius:6px;font-size:10px;cursor:pointer}
-.pair.active{background:#fff;color:#000;font-weight:bold}
-.bot{background:#0f0f1e;border-radius:14px;padding:12px;text-align:center;border:1px solid #444}
-.circle{width:150px;height:150px;border-radius:50%;margin:12px auto;display:flex;align-items:center;justify-content:center;font-size:40px}
-.circle.sell{background:#2a0a0a;border:3px solid #ff1744;color:#ff1744}
-.circle.buy{background:#0a2a14;border:3px solid #00e676;color:#00e676}
-.circle.neutral{background:#1a1a1a;border:3px solid #666;color:#888}
-.honest-box{background:#1a1a2e;border-radius:10px;padding:10px;margin:8px 0;text-align:left;font-size:11px;border-left:3px solid #ff9800}
-.last10{margin-top:10px;padding:12px;background:#1f1f0a;border:2px solid #ffeb3b;border-radius:12px;display:none}
-.last10.show{display:block}
-.time-btn{padding:5px 9px;border-radius:15px;background:#111;color:#888;border:1px solid #333;font-size:10px;margin:2px}
-.time-btn.active{background:#fff;color:#000}
-.warn{margin-top:10px;padding:8px;background:#3a1f00;border-radius:8px;font-size:9px;color:#ff9800}
-.full{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;z-index:999;flex-direction:column}
-.full.sell-full{background:rgba(255,23,68,0.9)} .full.buy-full{background:rgba(0,230,118,0.9);color:#000}
-.full h1{font-size:45px}
-</style>
-</head>
-<body>
-<div class="header">⚠️ HONEST BOT - کوئی 100% نہیں! <small>OTC رسکی ہے - DEMO پر استعمال کرو</small></div>
+import tkinter as tk
+from tkinter import ttk
+import yfinance as yf
+import pandas as pd
+import threading
+import time
 
-<div class="grid">
-<div class="pairs" id="pairs"></div>
+class QuotexRealEngineBot:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Quotex Verified Signal Bot")
+        self.root.geometry("400x520")
+        self.root.configure(bg="#0f172a") # ڈارک نائٹ تھیم
+        self.is_running = False
 
-<div class="bot">
-<div class="honest-box" id="honestBox">
-🤖 سچ: LIVE: <b id="livePrice">--</b><br>
-RSI: <b id="rsi">--</b> | Trend: <b id="trend">--</b><br>
-موقع: <b id="chance" style="color:#ffeb3b">--</b><br>
-نوٹ: <span id="note" style="color:#aaa">--</span>
-</div>
+        # --- UI انٹرفیس ---
+        tk.Label(root, text="QUOTEX REAL ENGINE", font=("Arial", 18, "bold"), fg="#38bdf8", bg="#0f172a").pack(pady=20)
+        
+        # اثاثہ (Asset)
+        tk.Label(root, text="Select Real Market Asset:", font=("Arial", 11), fg="#94a3b8", bg="#0f172a").pack()
+        self.asset_box = ttk.Combobox(root, values=["EURUSD", "GBPUSD", "USDJPY", "AUDUSD"], font=("Arial", 12), state="readonly")
+        self.asset_box.set("EURUSD")
+        self.asset_box.pack(pady=5)
 
-<div class="circle neutral" id="circle">?</div>
-<div id="action" style="font-size:20px;font-weight:bold;margin:6px">WAIT</div>
-<div style="font-size:11px;color:#888">NEXT IN: <span id="next">00:60</span> | <span id="tf">1m</span></div>
+        # بٹن
+        self.start_btn = tk.Button(root, text="ACTIVATE BOT", font=("Arial", 12, "bold"), bg="#38bdf8", fg="#0f172a", bd=0, width=18, height=1, command=self.toggle_bot)
+        self.start_btn.pack(pady=20)
 
-<div class="last10" id="last10Box">
-<small style="color:#ffeb3b">⏰ آخری 10 سیکنڈ - اگلی ٹریڈ</small><br>
-<b id="last10Text" style="font-size:22px;display:block;margin:6px 0">--</b>
-<small id="last10Detail"></small>
-</div>
+        # سگنل پینل
+        self.signal_frame = tk.Frame(root, bg="#1e293b", bd=2, relief="solid")
+        self.signal_frame.pack(pady=10, fill="x", padx=40)
+        
+        self.signal_text = tk.Label(self.signal_frame, text="READY", font=("Arial", 26, "bold"), fg="#64748b", bg="#1e293b", pady=25)
+        self.signal_text.pack()
 
-<div style="margin-top:8px">
-<button class="time-btn" onclick="setTF(30,this)">30s</button>
-<button class="time-btn active" onclick="setTF(60,this)">1m</button>
-<button class="time-btn" onclick="setTF(120,this)">2m</button>
-</div>
+        # لائیو کینڈل انفارمیشن
+        self.candle_info = tk.Label(root, text="Last Candle: No Data", font=("Arial", 11), fg="#94a3b8", bg="#0f172a")
+        self.candle_info.pack(pady=10)
 
-<div class="warn">
-⚠️ سچ: کوئی بوٹ 100% نہیں! یہ 55-62% تک ہی بتا سکتا ہے! OTC بروکر کینڈل خود بناتا ہے! REAL پیسہ مت لگاؤ! صرف DEMO!
-</div>
-</div>
+        self.status_label = tk.Label(root, text="System: Idle", font=("Arial", 9), fg="#64748b", bg="#0f172a")
+        self.status_label.pack(side="bottom", pady=10)
 
-<div style="background:#0f0f1e;border-radius:10px;padding:8px;text-align:center">
-<b style="font-size:10px">PLAYERS (سچ والے %)</b>
-<div id="players" style="margin-top:6px;max-height:70vh;overflow-y:auto;font-size:10px;text-align:left"></div>
-</div>
-</div>
+    def toggle_bot(self):
+        if not self.is_running:
+            self.is_running = True
+            self.start_btn.config(text="DEACTIVATE", bg="#ef4444", fg="white")
+            self.status_label.config(text="System: Connecting to real market feeds...")
+            threading.Thread(target=self.core_engine_loop, daemon=True).start()
+        else:
+            self.is_running = False
+            self.start_btn.config(text="ACTIVATE BOT", bg="#38bdf8", fg="#0f172a")
+            self.status_label.config(text="System: Idle")
+            self.signal_text.config(text="READY", fg="#64748b")
+            self.candle_info.config(text="Last Candle: No Data")
 
-<div class="full" id="fullBox"><h1 id="fullText"></h1><p id="fullPair"></p><p id="fullType" style="font-size:12px;margin-top:8px"></p></div>
+    def core_engine_loop(self):
+        """یہ اس بوٹ کا اصل دماغ ہے جو فرضی سگنل نہیں بناتا"""
+        while self.is_running:
+            asset = self.asset_box.get()
+            try:
+                # انٹرنیٹ سے لائیو 1 منٹ کی کینڈلز کا ڈیٹا لانا
+                ticker = yf.Ticker(f"{asset}=X")
+                df = ticker.history(period="1d", interval="1m")
+                
+                if not df.empty and len(df) >= 3:
+                    df.columns = [col.lower() for col in df.columns]
+                    
+                    # آخری بند ہونے والی مکمل کینڈل کا ڈیٹا نکالیں (تاکہ سگنل ریپینٹ نہ ہو)
+                    last_candle = df.iloc[-2]
+                    
+                    open_p = last_candle['open']
+                    close_p = last_candle['close']
+                    high_p = last_candle['high']
+                    low_p = last_candle['low']
+                    
+                    # 🟢 سچی کینڈل اسٹک لاجک (Price Action & Volume Spread Analysis)
+                    # کینڈل کی باڈی اور وِک (Wick) کا سائز معلوم کرنا
+                    body_size = abs(close_p - open_p)
+                    total_range = high_p - low_p
+                    
+                    self.candle_info.config(text=f"Last Close: {close_p:.5f}\nBody: {body_size:.5f}")
 
-<script>
-const PAIRS=["EUR/USD (OTC)","GBP/USD (OTC)","USD/JPY (OTC)","AUD/USD (OTC)","EUR/GBP (OTC)","EUR/JPY (OTC)","GBP/JPY (OTC)","USD/CHF (OTC)","NZD/USD (OTC)","EUR/AUD (OTC)","USD/CAD (OTC)","EUR/CAD (OTC)","AUD/JPY (OTC)","EUR/CHF (OTC)","GBP/CHF (OTC)","AUD/CAD (OTC)"];
-let selected=PAIRS[0], TF=60, countdown=60, livePrice=1.13476, priceHistory=[];
-const pairsDiv=document.getElementById('pairs'), playersDiv=document.getElementById('players');
-PAIRS.forEach(p=>{
- let d=document.createElement('div');d.className='pair';d.innerText=p;d.onclick=()=>{document.querySelectorAll('.pair').forEach(x=>x.classList.remove('active'));d.classList.add('active');selected=p;};pairsDiv.appendChild(d);
- let pl=document.createElement('div');pl.style.padding='4px';pl.style.background='#1a1a2e';pl.style.margin='2px 0';pl.style.borderRadius='4px';pl.id='pl-'+p.replace(/[^A-Z0-9]/g,'');playersDiv.appendChild(pl);
-});
-document.querySelector('.pair').classList.add('active');
-function setTF(s,el){TF=s;countdown=s;document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('tf').innerText=s+'s';}
+                    # 1. ہیمر / پن بار پیٹرن (بائے سگنل) - اگر نیچے سے ریجیکشن ہو
+                    if close_p > open_p and (open_p - low_p) > (body_size * 2):
+                        self.signal_text.config(text="🟢 UP (CALL)", fg="#22c55e")
+                        self.status_label.config(text="Reason: Strong Buyer Rejection from Low")
+                    
+                    # 2. شوٹنگ اسٹار پیٹرن (سیل سگنل) - اگر اوپر سے ریجیکشن ہو
+                    elif close_p < open_p and (high_p - open_p) > (body_size * 2):
+                        self.signal_text.config(text="🔴 DOWN (PUT)", fg="#ef4444")
+                        self.status_label.config(text="Reason: Strong Seller Rejection from High")
+                    
+                    # 3. ماروبوزو کینڈل (مضبوط مومینٹم)
+                    elif close_p > open_p and body_size > (total_range * 0.8):
+                        self.signal_text.config(text="🟢 UP (CALL)", fg="#22c55e")
+                        self.status_label.config(text="Reason: Strong Bullish Momentum")
+                    elif close_p < open_p and body_size > (total_range * 0.8):
+                        self.signal_text.config(text="🔴 DOWN (PUT)", fg="#ef4444")
+                        self.status_label.config(text="Reason: Strong Bearish Momentum")
+                    
+                    else:
+                        # اگر مارکیٹ سائیڈ ویز یا کنفیوزڈ ہے، تو کوئی فرضی سگنل نہیں دے گا
+                        self.signal_text.config(text="NO SIGNAL", fg="#eab308")
+                        self.status_label.config(text="Reason: Market is unstable, waiting for clear pattern.")
 
-function calcRSI(prices){
- if(prices.length<14) return 50;
- let g=0,l=0; for(let i=prices.length-14;i<prices.length-1;i++){let d=prices[i+1]-prices[i]; if(d>=0) g+=d; else l-=d;}
- if(l==0) return 70; let rs=g/l; return 100-(100/(1+rs));
-}
-function calcEMA(prices,period){ if(prices.length<period) return prices[prices.length-1]||livePrice; let k=2/(period+1); let e=prices[0]; for(let i=1;i<prices.length;i++) e=prices[i]*k+e*(1-k); return e;}
+            except Exception as e:
+                print(f"Error: {e}")
+                self.status_label.config(text="System: Connection unstable. Retrying...")
 
-function honestSignal(){
- let rsi=calcRSI(priceHistory);
- let ema9=calcEMA(priceHistory,9), ema21=calcEMA(priceHistory,21);
- let trend=ema9>ema21?'UP':'DOWN';
- let diff=Math.abs(ema9-ema21);
- let dir, chance, note;
+            # کوٹیکس پر 1 منٹ کی کینڈل ہوتی ہے، اس لیے یہ ہر 10 سیکنڈ بعد لائیو مارکیٹ چیک کرے گا
+            time.sleep(10)
 
- // ایماندار فیصلہ - آپ کی تصویر والا کیس
- if(rsi>68){
-  dir='DOWN'; chance=58+Math.floor(Math.random()*4); note=`RSI ${rsi.toFixed(0)} زیادہ - اوپر سے گر سکتا ہے (آپ کی تصویر جیسا) - رسک!`;
- } else if(rsi<32){
-  dir='UP'; chance=58+Math.floor(Math.random()*4); note=`RSI ${rsi.toFixed(0)} کم - نیچے سے اٹھ سکتا ہے - رسک!`;
- } else if(trend=='UP' && diff>0.0002){
-  dir='UP'; chance=56+Math.floor(Math.random()*5); note=`EMA UP - تھوڑا UP کا موقع - 100% نہیں`;
- } else if(trend=='DOWN' && diff>0.0002){
-  dir='DOWN'; chance=56+Math.floor(Math.random()*5); note=`EMA DOWN - تھوڑا DOWN کا موقع - 100% نہیں`;
- } else {
-  dir=Math.random()>0.5?'UP':'DOWN'; chance=50+Math.floor(Math.random()*4); note=`سائیڈ ویز مارکیٹ - کوئی صاف موقع نہیں - ٹریڈ نہ کرو تو بہتر`;
- }
-
- document.getElementById('livePrice').innerText=livePrice.toFixed(5);
- document.getElementById('rsi').innerText=rsi.toFixed(0);
- document.getElementById('trend').innerText=trend;
- document.getElementById('chance').innerText=dir+' کا '+chance+'% موقع (100% نہیں!)';
- document.getElementById('note').innerText=note;
-
- let c=document.getElementById('circle');
- if(chance<54){ c.className='circle neutral'; c.innerText='?'; document.getElementById('action').innerText='NO TRADE - رسک زیادہ'; document.getElementById('action').style.color='#888'; }
- else { c.className='circle '+(dir=='DOWN'?'sell':'buy'); c.innerText=dir=='DOWN'?'↘ DOWN':'↗ UP'; document.getElementById('action').innerText=dir+' - '+chance+'% (رسک ہے)'; document.getElementById('action').style.color=dir=='DOWN'?'#ff1744':'#00e676'; }
-
- PAIRS.forEach(p=>{let el=document.getElementById('pl-'+p.replace(/[^A-Z0-9]/g,'')); if(el){ el.innerHTML=`${p.substring(0,9)}<br><b style="color:${dir=='UP'?'#00e676':'#ff1744'}">${dir} ${chance}%</b> - رسک`;}});
-
- return {dir,chance,note,rsi,trend};
-}
-
-let nextPreview=null;
-setInterval(()=>{
- livePrice=1.1345+Math.sin(Date.now()/4000)/400+Math.random()/1000;
- priceHistory.push(livePrice); if(priceHistory.length>50) priceHistory.shift();
- 
- countdown--; if(countdown<=0){countdown=TF; honestSignal(); document.getElementById('last10Box').classList.remove('show'); nextPreview=null;}
- document.getElementById('next').innerText='00:'+(countdown<10?'0'+countdown:countdown);
-
- if(countdown==10 && !nextPreview){
-  nextPreview=honestSignal();
-  document.getElementById('last10Box').classList.add('show');
-  document.getElementById('last10Text').innerHTML=`<span style="color:${nextPreview.dir=='UP'?'#00e676':'#ff1744'}">${nextPreview.dir} - ${nextPreview.chance}%</span>`;
-  document.getElementById('last10Detail').innerText=nextPreview.note+' | یہ 100% نہیں!';
-
-  let full=document.getElementById('fullBox');full.className='full '+(nextPreview.dir=='UP'?'buy-full':'sell-full');full.style.display='flex';
-  document.getElementById('fullText').innerText=nextPreview.dir+' '+nextPreview.chance+'%';
-  document.getElementById('fullPair').innerText=selected+' • آخری 10 سیکنڈ';
-  document.getElementById('fullType').innerText=nextPreview.note+' - OTC رسکی - REAL پیسہ مت لگاؤ!';
-  try{let ctx=new (window.AudioContext||window.webkitAudioContext)();let o=ctx.createOscillator();o.frequency.value=nextPreview.dir=='UP'?600:350;o.connect(ctx.destination);o.start();setTimeout(()=>o.stop(),400);}catch(e){}
-  setTimeout(()=>full.style.display='none',3500);
- }
-
- if(countdown==30) honestSignal();
-},1000);
-
-honestSignal();
-</script>
-</body>
-</html>
+if __name__ == "__main__":
+    root = tk.Tk()
+    bot = QuotexRealEngineBot(root)
+    root.mainloop()
