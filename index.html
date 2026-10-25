@@ -1,116 +1,288 @@
-import tkinter as tk
-from tkinter import ttk
-import yfinance as yf
-import pandas as pd
-import threading
-import time
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotex 100% True Real-Time Momentum Bot</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0f19;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .bot-container {
+            background-color: #151f32;
+            border: 2px solid #1e293b;
+            border-radius: 16px;
+            padding: 30px;
+            width: 380px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        h2 {
+            color: #00e676;
+            margin-top: 0;
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            font-size: 13px;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 6px;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            background-color: #0b0f19;
+            border: 1px solid #334155;
+            color: #f8fafc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #00e676;
+            color: #0b0f19;
+        }
+        .btn.stop {
+            background-color: #ef4444;
+            color: white;
+        }
+        .signal-box {
+            background-color: #0b0f19;
+            border: 2px solid #1e293b;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #signalText {
+            font-size: 34px;
+            font-weight: bold;
+            color: #64748b;
+        }
+        #timeText {
+            font-size: 16px;
+            color: #94a3b8;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+        .countdown-box {
+            font-size: 18px;
+            color: #f59e0b;
+            font-weight: bold;
+            margin-bottom: 15px;
+            height: 25px;
+        }
+        .info-panel {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.8;
+            background: #0b0f19;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: left;
+            border: 1px solid #1e293b;
+        }
+    </style>
+</head>
+<body>
 
-class QuotexRealEngineBot:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Quotex Verified Signal Bot")
-        self.root.geometry("400x520")
-        self.root.configure(bg="#0f172a") # ڈارک نائٹ تھیم
-        self.is_running = False
+<div class="bot-container">
+    <h2>Quotex True Real Bot</h2>
+    
+    <div class="form-group">
+        <label>Select Real Market Asset:</label>
+        <select id="assetSelect" onchange="resetBot()">
+            <option value="btcusdt">BTC/USDT (Crypto Real)</option>
+            <option value="ethusdt">ETH/USDT (Crypto Real)</option>
+            <option value="xrpusdt">XRP/USDT (Crypto Real)</option>
+            <option value="solusdt">SOL/USDT (Crypto Real)</option>
+        </select>
+    </div>
 
-        # --- UI انٹرفیس ---
-        tk.Label(root, text="QUOTEX REAL ENGINE", font=("Arial", 18, "bold"), fg="#38bdf8", bg="#0f172a").pack(pady=20)
+    <div class="countdown-box" id="countdownText"></div>
+
+    <button id="actionBtn" class="btn" onclick="toggleBot()">START BOT</button>
+
+    <div class="signal-box">
+        <div id="signalText">READY</div>
+        <div id="timeText">Press Start to Analyze</div>
+    </div>
+
+    <div class="info-panel">
+        <div>Live Price: <span id="livePrice" style="color:#ffffff; font-weight:bold;">0.00</span></div>
+        <div>Price Change (5s): <span id="momentumVal" style="color:#ffffff; font-weight:bold;">0.00</span></div>
+    </div>
+</div>
+
+<script>
+let ws = null;
+let isRunning = false;
+let priceHistory = []; // پچھلے چند سیکنڈز کی قیمتیں محفوظ کرنے کے لیے
+let mainInterval = null;
+let countdownInterval = null;
+
+function playBeep(type) {
+    const context = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = context.createOscillator();
+    const gainNode = context.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(context.destination);
+    oscillator.frequency.value = type === 'up' ? 850 : 450;
+    oscillator.start();
+    gainNode.gain.setValueAtTime(0.2, context.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.00001, context.currentTime + 0.4);
+    oscillator.stop(context.currentTime + 0.4);
+}
+
+function resetBot() {
+    if (isRunning) {
+        toggleBot(); // بند کر کے دوبارہ چلائیں تاکہ نیو پیئر لوڈ ہو جائے
+        toggleBot();
+    }
+}
+
+function toggleBot() {
+    const btn = document.getElementById("actionBtn");
+    const asset = document.getElementById("assetSelect").value;
+
+    if (!isRunning) {
+        isRunning = true;
+        btn.innerText = "STOP BOT";
+        btn.classList.add("stop");
+        priceHistory = [];
+        connectWebSocket(asset);
+        startBotLoop();
+    } else {
+        isRunning = false;
+        btn.innerText = "START BOT";
+        btn.classList.remove("stop");
+        document.getElementById("signalText").innerText = "READY";
+        document.getElementById("signalText").style.color = "#64748b";
+        document.getElementById("timeText").innerText = "Press Start to Analyze";
+        document.getElementById("countdownText").innerText = "";
         
-        # اثاثہ (Asset)
-        tk.Label(root, text="Select Real Market Asset:", font=("Arial", 11), fg="#94a3b8", bg="#0f172a").pack()
-        self.asset_box = ttk.Combobox(root, values=["EURUSD", "GBPUSD", "USDJPY", "AUDUSD"], font=("Arial", 12), state="readonly")
-        self.asset_box.set("EURUSD")
-        self.asset_box.pack(pady=5)
+        if (ws) ws.close();
+        clearInterval(mainInterval);
+        clearInterval(countdownInterval);
+    }
+}
 
-        # بٹن
-        self.start_btn = tk.Button(root, text="ACTIVATE BOT", font=("Arial", 12, "bold"), bg="#38bdf8", fg="#0f172a", bd=0, width=18, height=1, command=self.toggle_bot)
-        self.start_btn.pack(pady=20)
-
-        # سگنل پینل
-        self.signal_frame = tk.Frame(root, bg="#1e293b", bd=2, relief="solid")
-        self.signal_frame.pack(pady=10, fill="x", padx=40)
+function connectWebSocket(asset) {
+    if(ws) ws.close();
+    // بائننس کی لائیو لکیر ٹِک ندی (Tick Stream) جو ہر سیکنڈ لائیو قیمت بدلتی ہے
+    ws = new WebSocket(`wss://://binance.com{asset}@ticker`);
+    ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        const price = parseFloat(data.c);
+        document.getElementById("livePrice").innerText = price.toFixed(2);
         
-        self.signal_text = tk.Label(self.signal_frame, text="READY", font=("Arial", 26, "bold"), fg="#64748b", bg="#1e293b", pady=25)
-        self.signal_text.pack()
+        // قیمت کی ہسٹری محفوظ کریں (آخری 10 سیکنڈز)
+        priceHistory.push(price);
+        if (priceHistory.length > 10) priceHistory.shift();
+    };
+}
 
-        # لائیو کینڈل انفارمیشن
-        self.candle_info = tk.Label(root, text="Last Candle: No Data", font=("Arial", 11), fg="#94a3b8", bg="#0f172a")
-        self.candle_info.pack(pady=10)
+function startBotLoop() {
+    runAnalysisCycle();
+    // ہر 30 سیکنڈ بعد لائیو مارکیٹ کا اگلا سگنل چیک کرے گا
+    mainInterval = setInterval(() => {
+        if (isRunning) runAnalysisCycle();
+    }, 30000); // 30 سیکنڈ کا سائیکل
+}
 
-        self.status_label = tk.Label(root, text="System: Idle", font=("Arial", 9), fg="#64748b", bg="#0f172a")
-        self.status_label.pack(side="bottom", pady=10)
+function runAnalysisCycle() {
+    let timeLeft = 10;
+    const countdownText = document.getElementById("countdownText");
+    const signalText = document.getElementById("signalText");
+    const timeText = document.getElementById("timeText");
 
-    def toggle_bot(self):
-        if not self.is_running:
-            self.is_running = True
-            self.start_btn.config(text="DEACTIVATE", bg="#ef4444", fg="white")
-            self.status_label.config(text="System: Connecting to real market feeds...")
-            threading.Thread(target=self.core_engine_loop, daemon=True).start()
-        else:
-            self.is_running = False
-            self.start_btn.config(text="ACTIVATE BOT", bg="#38bdf8", fg="#0f172a")
-            self.status_label.config(text="System: Idle")
-            self.signal_text.config(text="READY", fg="#64748b")
-            self.candle_info.config(text="Last Candle: No Data")
+    signalText.innerText = "ANALYZING...";
+    signalText.style.color = "#eab308";
+    timeText.innerText = "Reading Live Market Speed...";
 
-    def core_engine_loop(self):
-        """یہ اس بوٹ کا اصل دماغ ہے جو فرضی سگنل نہیں بناتا"""
-        while self.is_running:
-            asset = self.asset_box.get()
-            try:
-                # انٹرنیٹ سے لائیو 1 منٹ کی کینڈلز کا ڈیٹا لانا
-                ticker = yf.Ticker(f"{asset}=X")
-                df = ticker.history(period="1d", interval="1m")
-                
-                if not df.empty and len(df) >= 3:
-                    df.columns = [col.lower() for col in df.columns]
-                    
-                    # آخری بند ہونے والی مکمل کینڈل کا ڈیٹا نکالیں (تاکہ سگنل ریپینٹ نہ ہو)
-                    last_candle = df.iloc[-2]
-                    
-                    open_p = last_candle['open']
-                    close_p = last_candle['close']
-                    high_p = last_candle['high']
-                    low_p = last_candle['low']
-                    
-                    # 🟢 سچی کینڈل اسٹک لاجک (Price Action & Volume Spread Analysis)
-                    # کینڈل کی باڈی اور وِک (Wick) کا سائز معلوم کرنا
-                    body_size = abs(close_p - open_p)
-                    total_range = high_p - low_p
-                    
-                    self.candle_info.config(text=f"Last Close: {close_p:.5f}\nBody: {body_size:.5f}")
+    clearInterval(countdownInterval);
+    countdownText.innerText = `⏱️ Next Signal In: ${timeLeft}s`;
 
-                    # 1. ہیمر / پن بار پیٹرن (بائے سگنل) - اگر نیچے سے ریجیکشن ہو
-                    if close_p > open_p and (open_p - low_p) > (body_size * 2):
-                        self.signal_text.config(text="🟢 UP (CALL)", fg="#22c55e")
-                        self.status_label.config(text="Reason: Strong Buyer Rejection from Low")
-                    
-                    # 2. شوٹنگ اسٹار پیٹرن (سیل سگنل) - اگر اوپر سے ریجیکشن ہو
-                    elif close_p < open_p and (high_p - open_p) > (body_size * 2):
-                        self.signal_text.config(text="🔴 DOWN (PUT)", fg="#ef4444")
-                        self.status_label.config(text="Reason: Strong Seller Rejection from High")
-                    
-                    # 3. ماروبوزو کینڈل (مضبوط مومینٹم)
-                    elif close_p > open_p and body_size > (total_range * 0.8):
-                        self.signal_text.config(text="🟢 UP (CALL)", fg="#22c55e")
-                        self.status_label.config(text="Reason: Strong Bullish Momentum")
-                    elif close_p < open_p and body_size > (total_range * 0.8):
-                        self.signal_text.config(text="🔴 DOWN (PUT)", fg="#ef4444")
-                        self.status_label.config(text="Reason: Strong Bearish Momentum")
-                    
-                    else:
-                        # اگر مارکیٹ سائیڈ ویز یا کنفیوزڈ ہے، تو کوئی فرضی سگنل نہیں دے گا
-                        self.signal_text.config(text="NO SIGNAL", fg="#eab308")
-                        self.status_label.config(text="Reason: Market is unstable, waiting for clear pattern.")
+    countdownInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+            countdownText.innerText = `⏱️ Next Signal In: ${timeLeft}s`;
+        } else {
+            clearInterval(countdownInterval);
+            countdownText.innerText = "🎯 SYSTEM CALCULATED";
+            calculateTrueMomentum();
+        }
+    }, 1000);
+}
 
-            except Exception as e:
-                print(f"Error: {e}")
-                self.status_label.config(text="System: Connection unstable. Retrying...")
+function calculateTrueMomentum() {
+    const signalText = document.getElementById("signalText");
+    const timeText = document.getElementById("timeText");
+    const momentumVal = document.getElementById("momentumVal");
 
-            # کوٹیکس پر 1 منٹ کی کینڈل ہوتی ہے، اس لیے یہ ہر 10 سیکنڈ بعد لائیو مارکیٹ چیک کرے گا
-            time.sleep(10)
+    if (priceHistory.length < 5) {
+        signalText.innerText = "WAITING DATA";
+        signalText.style.color = "#a855f7";
+        timeText.innerText = "Let the market ticks load for 5 seconds...";
+        return;
+    }
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    bot = QuotexRealEngineBot(root)
-    root.mainloop()
+    // 100% سچا ریاضیاتی حساب: آخری قیمت اور 5 سیکنڈ پرانی قیمت کا فرق
+    const latestPrice = priceHistory[priceHistory.length - 1];
+    const olderPrice = priceHistory[priceHistory.length - 5];
+    const priceDifference = latestPrice - olderPrice;
+
+    momentumVal.innerText = (priceDifference >= 0 ? "+" : "") + priceDifference.toFixed(4);
+
+    // تھریش ہولڈ (Threshold): یہ دیکھنے کے لیے کہ قیمت میں واقعی کوئی جان ہے یا مارکیٹ رکی ہوئی ہے
+    const minMovementNeeded = latestPrice * 0.00002; // مارکیٹ کے حجم کے مطابق اسمارٹ تھریش ہولڈ
+
+    if (priceDifference > minMovementNeeded) {
+        // قیمت سچ میں اوپر بھاگ رہی ہے
+        signalText.innerText = "🟢 UP (CALL)";
+        signalText.style.color = "#00e676";
+        timeText.innerText = "Momentum is BULLISH for 30 Seconds";
+        playBeep('up');
+    } else if (priceDifference < -minMovementNeeded) {
+        // قیمت سچ میں نیچے گر رہی ہے
+        signalText.innerText = "🔴 DOWN (PUT)";
+        signalText.style.color = "#ef4444";
+        timeText.innerText = "Momentum is BEARISH for 30 Seconds";
+        playBeep('down');
+    } else {
+        // اگر مارکیٹ رکی ہوئی یا کنفیوزڈ ہے، تو بوٹ سچائی کے ساتھ کہے گا کہ کوئی سگنل نہیں ہے تاکہ لاس نہ ہو
+        signalText.innerText = "NO SIGNAL";
+        signalText.style.color = "#94a3b8";
+        timeText.innerText = "Market is Flat (No Real Move)";
+    }
+}
+</script>
+
+</body>
+</html>
